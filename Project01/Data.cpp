@@ -1,12 +1,12 @@
 #pragma once
-#include <Data.h>
-int &Data::get_id()
+#include "Data.h"
+wstring &Data::get_id()
 {
     return id;
 }
 
 // UserData
-const string &UserData::get_password()
+const wstring &UserData::get_password()
 {
     return password;
 }
@@ -15,13 +15,21 @@ const float &UserData::get_balance()
 {
     return balance;
 }
-void UserData::set_password(const string &s)
+const UserTypes& UserData::get_usertype()
+{
+   return user_type;
+}
+void UserData::set_password(const wstring &s)
 {
     password = s;
 }
 void UserData::set_balance(const float &b)
 {
     balance = b;
+}
+void UserData::set_user_type(const UserTypes u_t)
+{
+   user_type = u_t;
 }
 bool UserData::is_banned()
 {
@@ -33,7 +41,7 @@ int &CommodityData::get_quantity()
 {
     return quantity;
 }
-int &CommodityData::get_seller_id()
+wstring &CommodityData::get_seller_id()
 {
     return seller_id;
 }
@@ -53,7 +61,26 @@ void CommodityData::set_price(const float &p)
 {
     price = p;
 }
+void CommodityData::set_seller_id(const int& s_id)
+{
+   seller_id = s_id;
+}
 void CommodityData::set_commodity_state(const CommodityStates &c)
 {
     commodity_state = c;
+}
+
+Table<CommodityData>* DataHandler::get_commodity_table()
+{
+   return &commodityTable;
+}
+
+Table<UserData>* DataHandler::get_user_table()
+{
+   return &userTable;
+}
+
+Table<OrderData>* DataHandler::get_order_table()
+{
+   return &orderTable;
 }

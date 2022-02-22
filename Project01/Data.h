@@ -2,91 +2,108 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include <memory>
+#include "SQL_Interpreter.h"
 using namespace std;
-using d_ptr = unique_ptr<Data>;
+
 enum UserTypes
 {
-    ADMIN,
-    AVE_USER
+	ADMIN,
+	AVE_USER
 };
 
 enum CommodityStates
 {
-    ON_SELL,
-    OFF_SHELF
+	ON_SELL,
+	OFF_SHELF
 };
 
 class Data
 {
 protected:
-    int id;
+	wstring id;
 
 public:
-    wstring name;
-    int &get_id();
+	wstring name;
+	wstring& get_id();
+	friend class SQL_Interpreter;
 };
 
 class UserData : public Data
 {
 private:
-    string password;
-    float balance;
-    UserTypes user_type;
-    bool banned;
+	wstring password;
+	float balance;
+	UserTypes user_type;
+	bool banned;
 
 public:
-    wstring address;
-    int contact;
-    const string &get_password();
-    const float &get_balance();
-    const UserTypes &get_usertype();
-    void set_password(const string &s);
-    void set_balance(const float &b);
-    bool is_banned();
+	wstring address;
+	int contact;
+	const wstring& get_password();
+	const float& get_balance();
+	const UserTypes& get_usertype();
+	void set_password(const wstring& s);
+	void set_balance(const float& b);
+	void set_user_type(const UserTypes u_t);
+	bool is_banned();
+	friend class SQL_Interpreter;
 };
 
 class CommodityData : public Data
 {
 private:
-    int quantity;
-    int seller_id;
-    float price;
-    CommodityStates commodity_state;
+	int quantity;
+	wstring seller_id;
+	float price;
+	CommodityStates commodity_state;
 
 public:
-    wstring description;
-    string time_on_self;
-    int &get_quantity();
-    int &get_seller_id();
-    float &get_price();
-    CommodityStates &get_commodity_state();
-    void set_quantity(const int &q);
-    void set_price(const float &p);
-    void set_commodity_state(const CommodityStates &c);
+	wstring description;
+	wstring time_on_self;
+	int& get_quantity();
+	wstring& get_seller_id();
+	float& get_price();
+	CommodityStates& get_commodity_state();
+	void set_quantity(const int& q);
+	void set_price(const float& p);
+	void set_seller_id(const int& s_id);
+	void set_commodity_state(const CommodityStates& c);
+	friend class SQL_Interpreter;
 };
 
+class OrderData :public Data
+{
+public:
+	wstring commodity_id;
+	wstring time;
+	wstring seller_id;
+	wstring buyer_id;
+	float price;
+	int quantity;
+	friend class SQL_Interpreter;
+};
+
+
+template<typename T>
 class Table
 {
 private:
-    int cnt = 0;
-    list<d_ptr> _list;
+	int cnt = 0;
+	list<T> _list;
 public:
-    void *insert_into(Data *d);
-    void *update(Data *d, wstring &coloum, wstring &value);
-    list<d_ptr> *select();
-    list<d_ptr> *select(wstring &coloum, wstring &value);
+	friend class SQL_Interpreter;
 };
 
 class DataHandler
 {
 private:
-    Table commodityTable;
-    Table userTable;
-    Table orderTable;
+	Table<CommodityData> commodityTable;
+	Table<UserData> userTable;
+	Table<OrderData> orderTable;
 
 public:
-    Table *get_commodity_table();
-    Table *get_user_table();
-    Table *get_order_table();
+	Table<CommodityData>* get_commodity_table();
+	Table<UserData>* get_user_table();
+	Table<OrderData>* get_order_table();
 };
+
