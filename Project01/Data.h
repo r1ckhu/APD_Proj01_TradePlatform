@@ -47,7 +47,8 @@ public:
 	void set_user_type(const UserTypes u_t);
 	bool is_banned();
 	friend class SQL_Interpreter;
-};
+	friend wostream& operator<<(wostream& output, const UserData& ud);
+};;
 
 class CommodityData : public Data
 {
@@ -69,6 +70,7 @@ public:
 	void set_seller_id(const int& s_id);
 	void set_commodity_state(const CommodityStates& c);
 	friend class SQL_Interpreter;
+	friend wostream& operator<<(wostream& output, const CommodityData& cd);
 };
 
 class OrderData :public Data
@@ -81,6 +83,7 @@ public:
 	float price;
 	int quantity;
 	friend class SQL_Interpreter;
+	friend wostream& operator<<(wostream& output, const OrderData& od);
 };
 
 

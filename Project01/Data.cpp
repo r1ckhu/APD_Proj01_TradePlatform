@@ -1,86 +1,107 @@
 #pragma once
 #include "Data.h"
-wstring &Data::get_id()
+wstring& Data::get_id()
 {
-    return id;
+	return id;
 }
 
 // UserData
-const wstring &UserData::get_password()
+const wstring& UserData::get_password()
 {
-    return password;
+	return password;
 }
 
-const float &UserData::get_balance()
+const float& UserData::get_balance()
 {
-    return balance;
+	return balance;
 }
 const UserTypes& UserData::get_usertype()
 {
-   return user_type;
+	return user_type;
 }
-void UserData::set_password(const wstring &s)
+void UserData::set_password(const wstring& s)
 {
-    password = s;
+	password = s;
 }
-void UserData::set_balance(const float &b)
+void UserData::set_balance(const float& b)
 {
-    balance = b;
+	balance = b;
 }
 void UserData::set_user_type(const UserTypes u_t)
 {
-   user_type = u_t;
+	user_type = u_t;
 }
 bool UserData::is_banned()
 {
-    return banned;
+	return banned;
 }
 
 // Commodity Data
-int &CommodityData::get_quantity()
+int& CommodityData::get_quantity()
 {
-    return quantity;
+	return quantity;
 }
-wstring &CommodityData::get_seller_id()
+wstring& CommodityData::get_seller_id()
 {
-    return seller_id;
+	return seller_id;
 }
-float &CommodityData::get_price()
+float& CommodityData::get_price()
 {
-    return price;
+	return price;
 }
-CommodityStates &CommodityData::get_commodity_state()
+CommodityStates& CommodityData::get_commodity_state()
 {
-    return commodity_state;
+	return commodity_state;
 }
-void CommodityData::set_quantity(const int &q)
+void CommodityData::set_quantity(const int& q)
 {
-    quantity = q;
+	quantity = q;
 }
-void CommodityData::set_price(const float &p)
+void CommodityData::set_price(const float& p)
 {
-    price = p;
+	price = p;
 }
 void CommodityData::set_seller_id(const int& s_id)
 {
-   seller_id = s_id;
+	seller_id = s_id;
 }
-void CommodityData::set_commodity_state(const CommodityStates &c)
+void CommodityData::set_commodity_state(const CommodityStates& c)
 {
-    commodity_state = c;
+	commodity_state = c;
 }
 
 Table<CommodityData>* DataHandler::get_commodity_table()
 {
-   return &commodityTable;
+	return &commodityTable;
 }
 
 Table<UserData>* DataHandler::get_user_table()
 {
-   return &userTable;
+	return &userTable;
 }
 
 Table<OrderData>* DataHandler::get_order_table()
 {
-   return &orderTable;
+	return &orderTable;
+}
+
+wostream& operator<<(wostream& output, const UserData& ud)
+{
+	output << ud.id << ' ' << ud.name << ' ' << ud.contact << ' ' << ud.address << ' '\
+		<< ud.balance <<' ' << ud.password;
+	return output;
+}
+
+wostream& operator<<(wostream& output, const CommodityData& cd)
+{
+	output << cd.id << ' ' << cd.name << ' ' << cd.price << ' ' << cd.time_on_self << ' '\
+		<< cd.seller_id << ' ' << cd.quantity <<' ' << cd.description <<' ' << cd.commodity_state;
+	return output;
+}
+
+wostream& operator<<(wostream& output, const OrderData& od)
+{
+	output << od.id << ' ' << od.commodity_id << ' ' << od.price << ' ' << od.quantity << ' '\
+		<< od.seller_id << ' ' << od.buyer_id;
+	return output;
 }
