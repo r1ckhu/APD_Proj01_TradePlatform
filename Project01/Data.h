@@ -48,10 +48,8 @@ public:
 	void set_balance(const float& b);
 	void set_user_type(const UserTypes u_t);
 	bool is_banned();
-	//void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
 	friend wostream& operator<<(wostream& output, const UserData& ud);
-	//friend wstringstream& operator>>(wstringstream& input, UserData& ud);
 };
 
 class CommodityData : public Data
@@ -77,7 +75,7 @@ public:
 	void set_commodity_state(const CommodityStates& c);
 	void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
-	//friend wostream& operator<<(wostream& output, const CommodityData& cd);
+	friend wostream& operator<<(wostream& output, const CommodityData& cd);
 };
 
 class OrderData :public Data
@@ -91,10 +89,8 @@ public:
 	int quantity;
 	OrderData();
 	OrderData(wstringstream& values);
-	//void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
 	friend wostream& operator<<(wostream& output, const OrderData& od);
-	//friend wstringstream& operator>>(wstringstream& input, OrderData& od);
 };
 
 

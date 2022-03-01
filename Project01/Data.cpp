@@ -140,13 +140,6 @@ wostream& operator<<(wostream& output, const CommodityData& cd)
 	return output;
 }
 
-wstringstream& operator>>(wstringstream& input, CommodityData& cd)
-{
-	input >> cd.id >> cd.name >> cd.price >> \
-		cd.time_on_shelf >> cd.seller_id >> cd.quantity \
-		>> cd.description;
-}
-
 wostream& operator<<(wostream& output, const OrderData& od)
 {
 	output << od.id << ' ' << od.commodity_id << ' ' << od.price << ' ' << od.quantity << ' '\

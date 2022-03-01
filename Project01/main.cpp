@@ -6,14 +6,14 @@ SQL_Interpreter sql_interpreter;
 int main()
 {
 	wcout.imbue(locale("chs"));
-	wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10-30,U002,10,A Test Commodity)";
+	wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10-31,U002,10,A_Test_Commodity)";
 	sql_interpreter.interpret(ws);
 	ws = L"INSERT INTO commodity VALUES (M010,NAMEEE,10.5,10-30,U001,10,ATestCommodity)";
 	sql_interpreter.interpret(ws);
 
 	ws = L"INSERT INTO order VALUES (T002,M001,10,20,10-20,U001,U003)";
 	sql_interpreter.interpret(ws);
-	ws = L"INSERT INTO order VALUES (T010,M005,12,90,11-20,U001,U003)";
+	ws = L"INSERT INTO order VALUES (T010,M005,12,90,11-20,U002,U003)";
 	sql_interpreter.interpret(ws);
 
 	ws = L"INSERT INTO user VALUES (U010,RICK,12345,NANJINGUNIVERSITY,0,12345)";
@@ -30,5 +30,46 @@ int main()
 	ws = L"UPDATE user SET 用户ID = U004, 用户名 = Max, 联系方式 = 0000, 地址 = 同济大学,\
 		 钱包余额 = 99, 密码 = qwerty WHERE 联系方式 = 12345";
 	sql_interpreter.interpret(ws);
+
+	ws = L"SELECT * FROM commodity";
+	list<CommodityData>* lc = (list<CommodityData>*)sql_interpreter.interpret(ws);
+	for (list<CommodityData>::iterator it = lc->begin(); it != lc->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl;
+	ws = L"SELECT * FROM commodity WHERE 上架时间 = 12-30";
+	lc = (list<CommodityData>*)sql_interpreter.interpret(ws);
+	for (list<CommodityData>::iterator it = lc->begin(); it != lc->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl << endl;
+
+
+	ws = L"SELECT * FROM user";
+	list<UserData>* lu = (list<UserData>*)sql_interpreter.interpret(ws);
+	for (list<UserData>::iterator it = lu->begin(); it != lu->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl;
+	ws = L"SELECT * FROM user WHERE 联系方式 = 0";
+	lu = (list<UserData>*)sql_interpreter.interpret(ws);
+	for (list<UserData>::iterator it = lu->begin(); it != lu->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl << endl;
+
+
+	ws = L"SELECT * FROM order";
+	list<OrderData>* lo = (list<OrderData>*)sql_interpreter.interpret(ws);
+	for (list<OrderData>::iterator it = lo->begin(); it != lo->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl;
+	ws = L"SELECT * FROM order WHERE 卖家ID = U007";
+	lo = (list<OrderData>*)sql_interpreter.interpret(ws);
+	for (list<OrderData>::iterator it = lo->begin(); it != lo->end(); it++) {
+		wcout << *it << endl;
+	}
+	cout << endl << endl;
 	return 0;
 }

@@ -8,7 +8,6 @@ extern DataHandler datahandler;
 const float DELTA = 0.00001;
 
 void* SQL_Interpreter::interpret(wstring& statement) {
-	// !! TODO: After reloading the operator >> in Data, template may be used to simplfy the code
 	wstringstream wss;
 	wss << statement;
 	wstring word;
@@ -16,45 +15,25 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 	if (word == L"INSERT") {
 		wss >> word >> word; // word is now name
 		wstring name = word;
-		// Remove ( and , in wss
-		wss >> word >> word;
+		wss >> word >> word; // Remove ( and , in wss
 		word.erase(word.begin());
+		word.erase(--word.end());
 		for (int i = 0; i < word.size(); i++)
 			if (word[i] == ',')
 				word[i] = ' ';
 		wstringstream values;
 		values << word;
-
 		if (name == L"commodity") {
 			Table<CommodityData>* table = datahandler.get_commodity_table();
-			CommodityData newData;
-			// TODO : it can be done by overloading the operator >>
-			values >> newData.id >> newData.name >> newData.price >> \
-				newData.time_on_shelf >> newData.seller_id >> newData.quantity \
-				>> newData.description;
-			while (wss >> word) {
-				newData.description += ' ';
-				newData.description.append(word);
-			}
-			newData.description.erase(--newData.description.end());
-			newData.commodity_state = ON_SELL;
-			table->_list.push_back(newData);
+			insert<CommodityData>(values, table);
 		}
 		else if (name == L"order") {
 			Table<OrderData>* table = datahandler.get_order_table();
-			OrderData newData;
-			values >> newData.id >> newData.commodity_id >> newData.price >> newData.quantity\
-				>> newData.time >> newData.seller_id >> newData.buyer_id;
-			table->_list.push_back(newData);
+			insert<OrderData>(values, table);
 		}
 		else if (name == L"user") {
 			Table<UserData>* table = datahandler.get_user_table();
-			UserData newData;
-			values >> newData.id >> newData.name >> newData.contact >> \
-				newData.address >> newData.balance >> newData.password;
-			newData.user_type = AVE_USER;
-			newData.banned = false;
-			table->_list.push_back(newData);
+			insert<UserData>(values, table);
 		}
 		return nullptr;
 	}
@@ -63,60 +42,27 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 		wstring name = word, col, val, eq;
 		wstring space = L" ";
 		wss >> word; // word is now set
-		wstringstream values;
+		wstringstream values, ws_val;
 		wss >> col >> eq >> val;
-		// 准备字符串流
-		while (col != L"WHERE") {
+		while (col != L"WHERE") { // 准备字符串流
 			if (*(--val.end()) == ',')
 				val.erase(--val.end());
 			values << col << space << val << space;
 			wss >> col >> eq >> val;
 		}
-		col = eq;
-		wss >> val;
-		wstringstream ws_val;
+		col = eq; wss >> val;
 		ws_val << val;
 		if (name == L"commodity") {
 			Table<CommodityData>* table = datahandler.get_commodity_table();
-			for (list<CommodityData>::iterator it = table->_list.begin(); \
-				it != table->_list.end(); it++) {
-				// 循环遍历commodity表中的所有数据
-				values.clear();
-				values.seekg(0);
-				ws_val.clear();
-				ws_val.seekg(0);
-				// val 此时应是某一个值，假如对应的值是wstring类型则可以直接比较
-				// 否则就将之前储存进 ws_val 中的值类型转换后再比较
-				if (is_col_eql_val(ws_val, col, val, *it)) {
-					update(values, *it);
-				}
-			}
+			update<CommodityData>(values, ws_val, col, val, table);
 		}
 		else if (name == L"order") {
 			Table<OrderData>* table = datahandler.get_order_table();
-			for (list<OrderData>::iterator it = table->_list.begin(); \
-				it != table->_list.end(); it++) {
-				values.clear();
-				values.seekg(0);
-				ws_val.clear();
-				ws_val.seekg(0);
-				if (is_col_eql_val(ws_val, col, val, *it)) {
-					update(values, *it);
-				}
-			}
+			update<OrderData>(values, ws_val, col, val, table);
 		}
 		else if (name == L"user") {
 			Table<UserData>* table = datahandler.get_user_table();
-			for (list<UserData>::iterator it = table->_list.begin(); \
-				it != table->_list.end(); it++) {
-				values.clear();
-				values.seekg(0);
-				ws_val.clear();
-				ws_val.seekg(0);
-				if (is_col_eql_val(ws_val, col, val, *it)) {
-					update(values, *it);
-				}
-			}
+			update<UserData>(values, ws_val, col, val, table);
 		}
 		return nullptr;
 	}
@@ -128,41 +74,33 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 			wstringstream ws_val;
 			wss >> col >> word >> val;
 			ws_val << val;
+			void* dst = nullptr;
 			if (name == L"commodity") {
-				list<CommodityData>* dst = new list<CommodityData>;
 				Table<CommodityData>* table = datahandler.get_commodity_table();
-				for (list<CommodityData>::iterator it = table->_list.begin(); \
-					it != table->_list.end(); it++) {
-					ws_val.seekg(0);
-					ws_val.clear();
-					if (is_col_eql_val(ws_val, col, val, *it))
-						dst->push_back(*it);
-				}
-				return dst;
+				dst = select<CommodityData>(ws_val, col, val, table);
 			}
 			else if (name == L"order") {
-				list<OrderData>* dst = new list<OrderData>;
 				Table<OrderData>* table = datahandler.get_order_table();
-				for (list<OrderData>::iterator it = table->_list.begin(); \
-					it != table->_list.end(); it++) {
-					ws_val.seekg(0);
-					ws_val.clear();
-					if (is_col_eql_val(ws_val, col, val, *it))
-						dst->push_back(*it);
-				}
-				return dst;
+				dst = select<OrderData>(ws_val, col, val, table);
 			}
 			else if (name == L"user") {
-				list<UserData>* dst = new list<UserData>;
 				Table<UserData>* table = datahandler.get_user_table();
-				for (list<UserData>::iterator it = table->_list.begin(); \
-					it != table->_list.end(); it++) {
-					ws_val.seekg(0);
-					ws_val.clear();
-					if (is_col_eql_val(ws_val, col, val, *it))
-						dst->push_back(*it);
-				}
-				return dst;
+				dst = select<UserData>(ws_val, col, val, table);
+			}
+			return dst;
+		}
+		else {
+			if (name == L"commodity") {
+				Table<CommodityData>* table = datahandler.get_commodity_table();
+				return &(table->_list);
+			}
+			else if (name == L"order") {
+				Table<OrderData>* table = datahandler.get_order_table();
+				return &(table->_list);
+			}
+			else if (name == L"user") {
+				Table<UserData>* table = datahandler.get_user_table();
+				return &(table->_list);
 			}
 		}
 		return nullptr;
@@ -171,8 +109,42 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 		cout << "Invalid SQL statement!" << endl;
 }
 
+template<typename T>
+void SQL_Interpreter::insert(wstringstream& values, Table<T>* table)
+{
+	T newdata(values);
+	table->_list.push_back(newdata);
+}
 
-void SQL_Interpreter::update(wstringstream& values, CommodityData& dst)
+template<typename T>
+void SQL_Interpreter::update(wstringstream& values, wstringstream& ws_val, wstring col, wstring val, Table<T>* table)
+{
+	typename list<T>::iterator it;
+	for (it = table->_list.begin(); it != table->_list.end(); it++) {
+		// 循环遍历表中的所有数据
+		values.clear(); values.seekg(0);
+		ws_val.clear(); ws_val.seekg(0);
+		// val 此时应是某一个值，假如对应的值是wstring类型则可以直接比较
+		// 否则就将之前储存进 ws_val 中的值类型转换后再比较
+		if (is_col_eql_val(ws_val, col, val, *it)) {
+			update_row(values, *it);
+		}
+	}
+}
+template<typename T>
+void* SQL_Interpreter::select(wstringstream& ws_val, wstring col, wstring val, Table<T>* table)
+{
+	list<T>* dst = new list<T>;
+	typename list<T>::iterator it;
+	for (it = table->_list.begin(); it != table->_list.end(); it++) {
+		ws_val.seekg(0); ws_val.clear();
+		if (is_col_eql_val(ws_val, col, val, *it))
+			dst->push_back(*it);
+	}
+	return dst;
+}
+
+void SQL_Interpreter::update_row(wstringstream& values, CommodityData& dst)
 {
 	wstring col, val;
 	while (values >> col >> val)
@@ -212,7 +184,7 @@ void SQL_Interpreter::update(wstringstream& values, CommodityData& dst)
 		}
 	}
 }
-void SQL_Interpreter::update(wstringstream& values, OrderData& dst)
+void SQL_Interpreter::update_row(wstringstream& values, OrderData& dst)
 {
 	wstring col, val;
 	while (values >> col >> val)
@@ -245,7 +217,7 @@ void SQL_Interpreter::update(wstringstream& values, OrderData& dst)
 			dst.buyer_id = val;
 	}
 }
-void SQL_Interpreter::update(wstringstream& values, UserData& dst)
+void SQL_Interpreter::update_row(wstringstream& values, UserData& dst)
 {
 	wstring col, val;
 	while (values >> col >> val)
@@ -313,7 +285,6 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring& col, wstrin
 			return true;
 		else if (val == L"已下架" && tar.commodity_state == OFF_SHELF)
 			return true;
-
 	}
 	return false;
 }
@@ -341,6 +312,7 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring
 		return true;
 	else if (col == L"买家ID" && tar.buyer_id == val)
 		return true;
+	return false;
 }
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring val, UserData& tar)
 {
@@ -373,4 +345,5 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring
 		else if (val == L"封禁" && tar.banned)
 			return true;
 	}
+	return false;
 }
