@@ -37,6 +37,8 @@ private:
 	bool banned;
 
 public:
+	UserData();
+	UserData(wstringstream& values);
 	wstring address;
 	int contact;
 	const wstring& get_password();
@@ -46,9 +48,11 @@ public:
 	void set_balance(const float& b);
 	void set_user_type(const UserTypes u_t);
 	bool is_banned();
+	//void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
 	friend wostream& operator<<(wostream& output, const UserData& ud);
-};;
+	//friend wstringstream& operator>>(wstringstream& input, UserData& ud);
+};
 
 class CommodityData : public Data
 {
@@ -60,7 +64,9 @@ private:
 
 public:
 	wstring description;
-	wstring time_on_self;
+	wstring time_on_shelf;
+	CommodityData();
+	CommodityData(wstringstream& values);
 	int& get_quantity();
 	wstring& get_seller_id();
 	float& get_price();
@@ -69,8 +75,9 @@ public:
 	void set_price(const float& p);
 	void set_seller_id(const int& s_id);
 	void set_commodity_state(const CommodityStates& c);
+	void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
-	friend wostream& operator<<(wostream& output, const CommodityData& cd);
+	//friend wostream& operator<<(wostream& output, const CommodityData& cd);
 };
 
 class OrderData :public Data
@@ -82,8 +89,12 @@ public:
 	wstring buyer_id;
 	float price;
 	int quantity;
+	OrderData();
+	OrderData(wstringstream& values);
+	//void initialize(wstringstream& values);
 	friend class SQL_Interpreter;
 	friend wostream& operator<<(wostream& output, const OrderData& od);
+	//friend wstringstream& operator>>(wstringstream& input, OrderData& od);
 };
 
 
@@ -95,6 +106,7 @@ private:
 	list<T> _list;
 public:
 	friend class SQL_Interpreter;
+	//write_to_file(); // TODO
 };
 
 class DataHandler
@@ -105,6 +117,7 @@ private:
 	Table<OrderData> orderTable;
 
 public:
+	//DataHandler(); // TODO
 	Table<CommodityData>* get_commodity_table();
 	Table<UserData>* get_user_table();
 	Table<OrderData>* get_order_table();
