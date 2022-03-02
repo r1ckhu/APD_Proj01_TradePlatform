@@ -1,12 +1,14 @@
 #pragma once
 #include "Data.h"
 #include "SQL_Interpreter.h"
+#include "Calculator.h"
 DataHandler datahandler;
 SQL_Interpreter sql_interpreter;
+Calculator calculator;
 int main()
 {
 	wcout.imbue(locale("chs"));
-	wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10-31,U002,10,A_Test_Commodity)";
+	/*wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10-31,U002,10,A_Test_Commodity)";
 	sql_interpreter.interpret(ws);
 	ws = L"INSERT INTO commodity VALUES (M010,NAMEEE,10.5,10-30,U001,10,ATestCommodity)";
 	sql_interpreter.interpret(ws);
@@ -70,6 +72,30 @@ int main()
 	for (list<OrderData>::iterator it = lo->begin(); it != lo->end(); it++) {
 		wcout << *it << endl;
 	}
-	cout << endl << endl;
+	cout << endl << endl;*/
+
+	string exp = "3 + 4 * 2 / ( 1 - 5 )";
+	float ans = calculator.calexp(exp);
+	cout << ans << endl<<endl;
+
+	exp = "-2";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
+
+	exp = "(-2)*4";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
+
+	exp = "2*-4";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
+
+	exp = "4*(-2)";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
+
+	exp = "((4 * 3 + 2) / (6.4 - 2.4) - 10) * (6.4 - 7.2) + (-2) * 4";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
 	return 0;
 }
