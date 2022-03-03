@@ -2,12 +2,14 @@
 #include "Data.h"
 #include "SQL_Interpreter.h"
 #include "Calculator.h"
+#include "Menu.h"
 DataHandler datahandler;
 SQL_Interpreter sql_interpreter;
 Calculator calculator;
 int main()
 {
-	wcout.imbue(locale("chs"));
+	wcout.imbue(locale("zh_CN.UTF-8"));
+	setlocale(LC_ALL, "zh_CN.UTF-8");
 	/*wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10-31,U002,10,A_Test_Commodity)";
 	sql_interpreter.interpret(ws);
 	ws = L"INSERT INTO commodity VALUES (M010,NAMEEE,10.5,10-30,U001,10,ATestCommodity)";
@@ -97,5 +99,14 @@ int main()
 	exp = "((4 * 3 + 2) / (6.4 - 2.4) - 10) * (6.4 - 7.2) + (-2) * 4";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
+
+	exp = "(2 + 4 * 3.5) * 6";
+	ans = calculator.calexp(exp);
+	cout << ans << endl << endl;
+	
+	UserData* ud = nullptr;
+	DefaultMenu defaultmenu;
+	UserMenu usermenu;
+	usermenu.inputloop(ud);
 	return 0;
 }
