@@ -1,6 +1,7 @@
 #pragma once
 #include "Menu.h"
-
+#include "User.h"
+extern UserHandler userhandler;
 using namespace std;
 
 void Menu::putnch(char ch, int n, bool changeline)
@@ -34,15 +35,18 @@ void DefaultMenu::inputloop(UserData* user)
 		wprintf(L"请输入操作:");
 		cin >> input;
 		if (input == 1) {
-			// TODO: admin login
-			continue;
+			UserData* user = userhandler.adminlogin();
+			if (user != nullptr) {
+				AdminMenu adminmenu;
+				adminmenu.inputloop(user);
+			}
 		}
 		else if (input == 2) {
 			// TODO: user register
 			continue;
 		}
 		else if (input == 3) {
-			// Todo: user login
+			userhandler.userlogin();
 			continue;
 		}
 		else if (input == 4) {
@@ -50,6 +54,44 @@ void DefaultMenu::inputloop(UserData* user)
 		}
 	}
 };
+
+
+void AdminMenu::printMenu()
+{
+	putnch('=', 100);
+	wcout << L"1.查看所有用户 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销" << endl;
+	putnch('=', 100);
+}
+void AdminMenu::inputloop(UserData *user)
+{
+	int input = 0;
+	while (true) {
+		printMenu();
+		wprintf(L"请输入操作:");
+		cin >> input;
+		if (input == 1) {
+			continue;
+		}
+		else if (input == 2) {
+			continue;
+		}
+		else if (input == 3) {
+			continue;
+		}
+		else if (input == 4) {
+			continue;
+		}
+		else if (input == 5) {
+			continue;
+		}
+		else if (input == 6) {
+			continue;
+		}
+		else if (input == 7) {
+			return;
+		}
+	}
+}
 
 void UserMenu::printMenu()
 {
@@ -163,9 +205,9 @@ void BuyerMenu::inputloop(UserData* user)
 
 void InfoMenu::printMenu()
 {
-	putnch('=', 89);
+	putnch('=', 45);
 	wcout << L"1.查看信息 2.修改信息 3.充值 4.返回用户主界面" << endl;
-	putnch('=', 89);
+	putnch('=', 45);
 }
 void InfoMenu::inputloop(UserData* user)
 {

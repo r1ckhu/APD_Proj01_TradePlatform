@@ -3,7 +3,14 @@
 #include <string>
 #include <list>
 #include "SQL_Interpreter.h"
+#include "Data.h"
 using namespace std;
+extern const string fpath_commodity;
+extern const string fpath_order;
+extern const string fpath_user;
+extern const wstring user_attribute;
+extern const wstring order_attribute;
+extern const wstring commodity_attribute;
 
 enum UserTypes
 {
@@ -102,6 +109,8 @@ private:
 	list<T> _list;
 public:
 	friend class SQL_Interpreter;
+	friend class UserHandler;
+	friend class DataHandler;
 	//write_to_file(); // TODO
 };
 
@@ -113,7 +122,7 @@ private:
 	Table<OrderData> orderTable;
 
 public:
-	//DataHandler(); // TODO
+	DataHandler(); // TODO
 	Table<CommodityData>* get_commodity_table();
 	Table<UserData>* get_user_table();
 	Table<OrderData>* get_order_table();

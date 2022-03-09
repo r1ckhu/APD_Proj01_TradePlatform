@@ -9,14 +9,20 @@ class UserData;
 template<typename T>
 class Table;
 
+enum DATA_TYPES
+{
+	COMMODITY,
+	USER,
+	ORDER
+};
+
 class SQL_Interpreter
 {
 public:
 	void* interpret(wstring& statement);
 private:
-	// TODO: new function will be added during development
 	template <typename T>
-	void insert(wstringstream& values, Table<T>* table);
+	T insert(wstringstream& values, Table<T>* table);
 	template<typename T>
 	void update(wstringstream& values, wstringstream& ws_val, wstring col, wstring val, Table<T>* table);
 	template<typename T>
@@ -28,4 +34,9 @@ private:
 	void update_row(wstringstream& values, CommodityData& dst);
 	void update_row(wstringstream& values, OrderData& dst);
 	void update_row(wstringstream& values, UserData& dst);
+
+	void appendfile(CommodityData& cd);
+	void appendfile(UserData& ud);
+	void appendfile(OrderData& od);
+	void writefile(DATA_TYPES dt);
 };
