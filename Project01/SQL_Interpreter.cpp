@@ -163,35 +163,35 @@ void SQL_Interpreter::update_row(wstringstream& values, CommodityData& dst)
 	{
 		wstringstream ws_val;
 		ws_val.str(L"");
-		if (col == L"商品ID")
+		if (col == L"commodityID")
 			dst.id = val;
-		else if (col == L"名称")
+		else if (col == L"commodityName")
 			dst.name = val;
-		else if (col == L"价格")
+		else if (col == L"price")
 		{
 			float p = 0.0;
 			ws_val << val;
 			ws_val >> p;
 			dst.price = p;
 		}
-		else if (col == L"上架时间")
+		else if (col == L"addedDate")
 			dst.time_on_shelf = val;
-		else if (col == L"卖家ID")
+		else if (col == L"sellerID")
 			dst.seller_id = val;
-		else if (col == L"数量")
+		else if (col == L"number")
 		{
 			int q = 0;
 			ws_val << val;
 			ws_val >> q;
 			dst.quantity = q;
 		}
-		else if (col == L"描述")
+		else if (col == L"description")
 			dst.description = val;
-		else if (col == L"商品状态")
+		else if (col == L"state")
 		{
-			if (val == L"销售中")
+			if (val == L"onSale")
 				dst.commodity_state = ON_SELL;
-			else if (val == L"已下架")
+			else if (val == L"offShelf")
 				dst.commodity_state = OFF_SHELF;
 		}
 	}
@@ -203,29 +203,29 @@ void SQL_Interpreter::update_row(wstringstream& values, OrderData& dst)
 	{
 		wstringstream ws_val;
 		ws_val.str(L"");
-		if (col == L"订单ID")
+		if (col == L"orderID")
 			dst.id = val;
-		else if (col == L"商品ID")
+		else if (col == L"commodityID")
 			dst.commodity_id = val;
-		else if (col == L"交易单价")
+		else if (col == L"unitPrice")
 		{
 			float p = 0.0;
 			ws_val << val;
 			ws_val >> p;
 			dst.price = p;
 		}
-		else if (col == L"数量")
+		else if (col == L"number")
 		{
 			int q = 0;
 			ws_val << val;
 			ws_val >> q;
 			dst.quantity = q;
 		}
-		else if (col == L"交易时间")
+		else if (col == L"date")
 			dst.time = val;
-		else if (col == L"卖家ID")
+		else if (col == L"sellerID")
 			dst.seller_id = val;
-		else if (col == L"买家ID")
+		else if (col == L"buyerID")
 			dst.buyer_id = val;
 	}
 }
@@ -236,33 +236,33 @@ void SQL_Interpreter::update_row(wstringstream& values, UserData& dst)
 	{
 		wstringstream ws_val;
 		ws_val.str(L"");
-		if (col == L"用户ID")
+		if (col == L"userID")
 			dst.id = val;
-		else if (col == L"用户名")
+		else if (col == L"username")
 			dst.name = val;
-		else if (col == L"钱包余额")
+		else if (col == L"balance")
 		{
 			float b = 0.0;
 			ws_val << val;
 			ws_val >> b;
 			dst.balance = b;
 		}
-		else if (col == L"联系方式")
+		else if (col == L"phoneNumber")
 		{
 			int c = 0;
 			ws_val << val;
 			ws_val >> c;
 			dst.contact = c;
 		}
-		else if (col == L"地址")
+		else if (col == L"address")
 			dst.address = val;
-		else if (col == L"密码")
+		else if (col == L"password")
 			dst.password = val;
-		else if (col == L"用户状态")
+		else if (col == L"userState")
 		{
-			if (val == L"正常")
+			if (val == L"active")
 				dst.banned = false;
-			else if (val == L"封禁")
+			else if (val == L"inactive")
 				dst.banned = true;
 		}
 	}
@@ -270,91 +270,91 @@ void SQL_Interpreter::update_row(wstringstream& values, UserData& dst)
 
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring& col, wstring& val, CommodityData& tar)
 {
-	if (col == L"商品ID" && val.find(tar.id) != wstring::npos)
+	if (col == L"commodityID" && val.find(tar.id) != wstring::npos)
 		return true;
-	else if (col == L"名称" && val.find(tar.name) != wstring::npos)
+	else if (col == L"commodityName" && val.find(tar.name) != wstring::npos)
 		return true;
-	else if (col == L"价格") {
+	else if (col == L"price") {
 		float p = 0.0;
 		ws_val >> p;
 		if (tar.price - p < DELTA)
 			return true;
 	}
-	else if (col == L"上架时间" && tar.time_on_shelf == val)
+	else if (col == L"addedDate" && tar.time_on_shelf == val)
 		return true;
-	else if (col == L"卖家ID" && tar.seller_id == val)
+	else if (col == L"sellerID" && tar.seller_id == val)
 		return true;
-	else if (col == L"数量") {
+	else if (col == L"number") {
 		int q = 0;
 		ws_val >> q;
 		if (tar.price == q)
 			return true;
 	}
-	else if (col == L"描述" && tar.description == val)
+	else if (col == L"description" && tar.description == val)
 		return true;
-	else if (col == L"商品状态") {
-		if (val == L"销售中" && tar.commodity_state == ON_SELL)
+	else if (col == L"state") {
+		if (val == L"onSale" && tar.commodity_state == ON_SELL)
 			return true;
-		else if (val == L"已下架" && tar.commodity_state == OFF_SHELF)
+		else if (val == L"offShelf" && tar.commodity_state == OFF_SHELF)
 			return true;
 	}
 	return false;
 }
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring val, OrderData& tar)
 {
-	if (col == L"订单ID" && tar.id == val)
+	if (col == L"orderID" && tar.id == val)
 		return true;
-	else if (col == L"商品ID" && tar.commodity_id == val)
+	else if (col == L"commodityID" && tar.commodity_id == val)
 		return true;
-	else if (col == L"交易单价") {
+	else if (col == L"unitPrice") {
 		float p = 0.0;
 		ws_val >> p;
 		if (p - tar.price < DELTA)
 			return true;
 	}
-	else if (col == L"数量") {
+	else if (col == L"number") {
 		int q = 0;
 		ws_val >> q;
 		if (q == tar.quantity)
 			return true;
 	}
-	else if (col == L"交易时间" && tar.time == val)
+	else if (col == L"date" && tar.time == val)
 		return true;
-	else if (col == L"卖家ID" && tar.seller_id == val)
+	else if (col == L"sellerID" && tar.seller_id == val)
 		return true;
-	else if (col == L"买家ID" && tar.buyer_id == val)
+	else if (col == L"buyerID" && tar.buyer_id == val)
 		return true;
 	return false;
 }
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring val, UserData& tar)
 {
-	if (col == L"用户ID" && val.find(tar.id) != wstring::npos)
+	if (col == L"userID" && val.find(tar.id) != wstring::npos)
 		return true;
-	else if (col == L"用户名" && val.find(tar.name) != wstring::npos)
+	else if (col == L"username" && val.find(tar.name) != wstring::npos)
 		return true;
-	else if (col == L"联系方式")
+	else if (col == L"phoneNumber")
 	{
 		int c = 0;
 		ws_val >> c;
 		if (c == tar.contact)
 			return true;
 	}
-	else if (col == L"密码" && tar.password == val)
+	else if (col == L"password" && tar.password == val)
 		return true;
-	else if (col == L"地址" && tar.address == val)
+	else if (col == L"address" && tar.address == val)
 		return true;
-	else if (col == L"钱包余额")
+	else if (col == L"balance")
 	{
 		float b = 0.0;
 		ws_val >> b;
 		if (abs(b - tar.balance) < DELTA)
 			return true;
 	}
-	else if (col == L"用户状态")
+	else if (col == L"userState")
 	{
-		if (val == L"正常" && !tar.banned)
+		if (val == L"active" && !tar.banned)
 			return true;
-		else if (val == L"封禁" && tar.banned)
+		else if (val == L"inactive" && tar.banned)
 			return true;
 	}
 	return false;
@@ -362,33 +362,33 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring
 
 void SQL_Interpreter::appendfile(CommodityData& cd)
 {
-	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
+	// commodityID, commodityName, price, number, description, sellerID, addedDate, state
 	wofstream output(fpath_commodity, ios::app);
 	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << cd.id << ',' << cd.name << ',' << cd.price << ',' << cd.quantity << ',' << cd.description\
 		<< ',' << cd.seller_id << ',' << cd.time_on_shelf << ',';
 	if (cd.commodity_state == ON_SELL)
-		output << L"销售中" << endl;
+		output << L"onSale" << endl;
 	else if (cd.commodity_state == OFF_SHELF)
-		output << L"已下架" << endl;
+		output << L"offShelf" << endl;
 	output.close();
 }
 void SQL_Interpreter::appendfile(UserData& ud)
 {
-	// 用户ID, 用户名, 密码, 联系方式, 地址, 钱包余额, 用户状态
+	// userID, username, password, phoneNumber, address, balance, userState
 	wofstream output(fpath_user, ios::app);
 	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << ud.id << ',' << ud.name << ',' << ud.password << ',' << ud.contact << ',' \
 		<< ud.address << ',' << ud.balance << ',';
 	if (ud.banned)
-		output << L"正常" << endl;
+		output << L"active" << endl;
 	else
-		output << L"封禁" << endl;
+		output << L"inactive" << endl;
 	output.close();
 }
 void SQL_Interpreter::appendfile(OrderData& od)
 {
-	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
+	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
 	wofstream output(fpath_order, ios::app);
 	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << od.id << ',' << od.commodity_id << ',' << od.price << ',' << od.quantity << ',' \
@@ -407,9 +407,9 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 			/*output << (*it).id << ',' << (*it).name << ',' << (*it).price << ',' << (*it).quantity << ',' << (*it).description\
 				<< ',' << (*it).seller_id << ',' << (*it).time_on_shelf << ',';
 			if ((*it).commodity_state == ON_SELL)
-				output << L"销售中" << endl;
+				output << L"onSale" << endl;
 			else if ((*it).commodity_state == OFF_SHELF)
-				output << L"已下架" << endl;*/
+				output << L"offShelf" << endl;*/
 			output << (*it) << endl;
 		}
 		output.close();
@@ -425,9 +425,9 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 			/*output << (*it).id << ',' << (*it).name << ',' << (*it).password << ',' << (*it).contact << ',' \
 				<< (*it).address << ',' << (*it).balance << ',';
 			if ((*it).banned)
-				output << L"正常" << endl;
+				output << L"active" << endl;
 			else
-				output << L"封禁" << endl;*/
+				output << L"inactive" << endl;*/
 			output << (*it) << endl;
 		}
 		output.close();

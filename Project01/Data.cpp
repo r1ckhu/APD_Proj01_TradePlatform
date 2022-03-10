@@ -9,9 +9,9 @@ using namespace std;
 const string fpath_user = "data\\user.txt";
 const string fpath_commodity = "data\\commodity.txt";
 const string fpath_order = "data\\order.txt";
-const wstring user_attribute = L"用户ID,用户名,密码,联系方式,地址,钱包余额,用户状态";
-const wstring commodity_attribute = L"商品ID,名称,价格,数量,描述,卖家ID,上架时间,商品状态";
-const wstring order_attribute = L"订单ID,商品ID,交易单价,数量,交易时间,卖家ID,买家ID";
+const wstring user_attribute = L"userID,username,password,phoneNumber,address,balance,userState";
+const wstring commodity_attribute = L"commodityID,commodityName,price,number,description,sellerID,addedDate,state";
+const wstring order_attribute = L"orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
 extern locale zh_utf;
 wstring& Data::get_id()
 {
@@ -63,11 +63,11 @@ UserData::UserData()
 
 UserData::UserData(wstringstream& values)
 {
-	// 用户ID,用户名,密码,联系方式,地址,钱包余额,用户状态
+	// userID,username,password,phoneNumber,address,balance,userState
 	wstring status;
 	values >> id >> name >> password >> contact >> address >> balance >> status;
 	user_type = AVE_USER;
-	if (status == L"正常")
+	if (status == L"active")
 		banned = false;
 	else
 		banned = true;
@@ -87,11 +87,11 @@ CommodityData::CommodityData(wstringstream& values)
 {
 	// description can not have space!!
 	wstring status;
-	// 商品ID,名称,价格,数量,描述,卖家ID,上架时间,商品状态
+	// commodityID,commodityName,price,number,description,sellerID,addedDate,state
 	values >> id >> name >> price >> quantity >> description\
 		>> seller_id >> time_on_shelf >> status;
 	//description.erase(--description.end());
-	if (status == L"销售中")
+	if (status == L"onSale")
 		commodity_state = ON_SELL;
 	else
 		commodity_state = OFF_SHELF;
@@ -228,7 +228,7 @@ Table<OrderData>* DataHandler::get_order_table()
 
 wostream& operator<<(wostream& output, const UserData& ud)
 {
-	// 用户ID, 用户名, 密码, 联系方式, 地址, 钱包余额, 用户状态
+	// userID, username, password, phoneNumber, address, balance, userState
 	output << ud.id << ' ' << ud.name << ' ' << ud.password << ' ' << ud.contact << ' '\
 		<< ud.address << ' ' << ud.balance << ' ' << ud.banned;
 	return output;
@@ -239,9 +239,9 @@ wofstream& operator<<(wofstream& output, const UserData& ud)
 	output << ud.id << ',' << ud.name << ',' << ud.password << ',' << ud.contact << ',' \
 		<< ud.address << ',' << ud.balance << ',';
 	if (ud.banned)
-		output << L"正常";
+		output << L"active";
 	else
-		output << L"封禁";
+		output << L"inactive";
 	return output;
 }
 
@@ -250,12 +250,12 @@ void UserData::format_output(int width)
 	wcout << setw(width) << id << setw(width) << name
 		<< setw(width) << contact << setw(width) << address
 		<< setw(width) << balance <<
-		setw(width) << (banned ? L"封禁" : L"正常") << endl;
+		setw(width) << (banned ? L"inactive" : L"active") << endl;
 }
 
 wostream& operator<<(wostream& output, const CommodityData& cd)
 {
-	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
+	// commodityID, commodityName, price, number, description, sellerID, addedDate, state
 	output << cd.id << ' ' << cd.name << ' ' << cd.price << ' ' << cd.quantity << ' '\
 		<< cd.description << ' ' << cd.seller_id << ' ' << cd.time_on_shelf << ' ' << cd.commodity_state;
 	return output;
@@ -266,9 +266,9 @@ wofstream& operator<<(wofstream& output, const CommodityData& cd)
 	output << cd.id << ',' << cd.name << ',' << cd.price << ',' << cd.quantity << ',' << cd.description\
 		<< ',' << cd.seller_id << ',' << cd.time_on_shelf << ',';
 	if (cd.commodity_state == ON_SELL)
-		output << L"销售中";
+		output << L"onSale";
 	else if (cd.commodity_state == OFF_SHELF)
-		output << L"已下架";
+		output << L"offShelf";
 	return output;
 }
 
@@ -278,12 +278,12 @@ void CommodityData::format_output(int width)
 		<< setw(width) << price << setw(width) << quantity
 		<< setw(width) << description << setw(width) << seller_id
 		<< setw(width) << time_on_shelf << setw(width)
-		<< setw(width) << (commodity_state == ON_SELL ? L"销售中" : L"已下架") << endl;
+		<< setw(width) << (commodity_state == ON_SELL ? L"onSale" : L"offShelf") << endl;
 }
 
 wostream& operator<<(wostream& output, const OrderData& od)
 {
-	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
+	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
 	output << od.id << ' ' << od.commodity_id << ' ' << od.price << ' ' << od.quantity << ' '\
 		<< od.seller_id << ' ' << od.buyer_id;
 	return output;
@@ -316,7 +316,7 @@ OrderData::OrderData()
 
 OrderData::OrderData(wstringstream& values)
 {
-	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
+	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
 	values >> id >> commodity_id >> price >> quantity \
 		>> time >> seller_id >> buyer_id;
 }

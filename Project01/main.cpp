@@ -18,12 +18,12 @@ int main()
 	wcin.imbue(locale("zh_CN.UTF-8"));
 	setlocale(LC_ALL, "zh_CN.UTF-8");
 	
-	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
-	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
-	// 用户ID, 用户名, 密码, 联系方式, 地址, 钱包余额, 用户状态
-	/*wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10,A_Test_Commodity,U002,10-31,销售中)";
+	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
+	// commodityID, commodityName, price, number, description, sellerID, addedDate, state
+	// userID, username, password, phoneNumber, address, balance, userState
+	/*wstring ws = L"INSERT INTO commodity VALUES (M001,NAME,10.5,10,A_Test_Commodity,U002,10-31,onSale)";
 	sql_interpreter.interpret(ws);
-	ws = L"INSERT INTO commodity VALUES (M011,NAMEEE,12.5,10,AGreenApple,U004,10-30,已下架)";
+	ws = L"INSERT INTO commodity VALUES (M011,NAMEEE,12.5,10,AGreenApple,U004,10-30,offShelf)";
 	sql_interpreter.interpret(ws);
 
 	ws = L"INSERT INTO order VALUES (T002,M001,10.1,20,10-20,U001,U003)";
@@ -31,19 +31,19 @@ int main()
 	ws = L"INSERT INTO order VALUES (T010,M005,12.2,90,11-20,U002,U003)";
 	sql_interpreter.interpret(ws);
 
-	ws = L"INSERT INTO user VALUES (U010,RICK,12345,1234555,NANJINGUNIVERSITY,0,正常)";
+	ws = L"INSERT INTO user VALUES (U010,RICK,12345,1234555,NANJINGUNIVERSITY,0,active)";
 	sql_interpreter.interpret(ws);
-	ws = L"INSERT INTO user VALUES (U012,Bono,password,12345,JIAOTONGUNIVERSITY,100,已封禁)";
+	ws = L"INSERT INTO user VALUES (U012,Bono,password,12345,JIAOTONGUNIVERSITY,100,已inactive)";
 	sql_interpreter.interpret(ws);
 
-	ws = L"UPDATE commodity SET 商品ID = M002, 名称 = EMAN, 价格 = 11, 上架时间 = 12-30,\
-		 卖家ID = U004, 数量 = 20, 描述 = 一个红苹果, 商品状态 = 已下架 WHERE 上架时间 = 10-30";
+	ws = L"UPDATE commodity SET commodityID = M002, commodityName = EMAN, price = 11, addedDate = 12-30,\
+		 sellerID = U004, number = 20, description = 一个红苹果, state = offShelf WHERE addedDate = 10-30";
 	sql_interpreter.interpret(ws);
-	ws = L"UPDATE order SET 订单ID = T009, 商品ID = M007, 交易单价 = 11, 交易时间 = 12-30,\
-		 卖家ID = U004, 数量 = 20, 买家ID = U001 WHERE 卖家ID = U001";
+	ws = L"UPDATE order SET orderID = T009, commodityID = M007, unitPrice = 11, date = 12-30,\
+		 sellerID = U004, number = 20, buyerID = U001 WHERE sellerID = U001";
 	sql_interpreter.interpret(ws);
-	ws = L"UPDATE user SET 用户ID = U004, 用户名 = Max, 联系方式 = 0000, 地址 = 同济大学,\
-		 钱包余额 = 99, 密码 = qwerty WHERE 联系方式 = 12345";
+	ws = L"UPDATE user SET userID = U004, username = Max, phoneNumber = 0000, address = 同济大学,\
+		 balance = 99, password = qwerty WHERE phoneNumber = 12345";
 	sql_interpreter.interpret(ws);*/
 	wstring ws;
 	ws = L"SELECT * FROM commodity";
@@ -52,7 +52,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM commodity WHERE 上架时间 CONTAINS 12-30";
+	ws = L"SELECT * FROM commodity WHERE addedDate CONTAINS 12-30";
 	lc = (list<CommodityData>*)sql_interpreter.interpret(ws);
 	for (list<CommodityData>::iterator it = lc->begin(); it != lc->end(); it++) {
 		wcout << *it << endl;
@@ -66,7 +66,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM user WHERE 联系方式 CONTAINS 0";
+	ws = L"SELECT * FROM user WHERE phoneNumber CONTAINS 0";
 	lu = (list<UserData>*)sql_interpreter.interpret(ws);
 	for (list<UserData>::iterator it = lu->begin(); it != lu->end(); it++) {
 		wcout << *it << endl;
@@ -80,7 +80,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM order WHERE 卖家ID CONTAINS U007";
+	ws = L"SELECT * FROM order WHERE sellerID CONTAINS U007";
 	lo = (list<OrderData>*)sql_interpreter.interpret(ws);
 	for (list<OrderData>::iterator it = lo->begin(); it != lo->end(); it++) {
 		wcout << *it << endl;
