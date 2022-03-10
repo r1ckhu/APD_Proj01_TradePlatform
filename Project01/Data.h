@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <fstream>
 #include "SQL_Interpreter.h"
 #include "Data.h"
 using namespace std;
@@ -55,8 +56,11 @@ public:
 	void set_balance(const float& b);
 	void set_user_type(const UserTypes u_t);
 	bool is_banned();
+	void format_output(int width);
 	friend class SQL_Interpreter;
+	friend class Menu;
 	friend wostream& operator<<(wostream& output, const UserData& ud);
+	friend wofstream& operator<<(wofstream& output, const UserData& ud);
 };
 
 class CommodityData : public Data
@@ -80,9 +84,11 @@ public:
 	void set_price(const float& p);
 	void set_seller_id(const int& s_id);
 	void set_commodity_state(const CommodityStates& c);
-	void initialize(wstringstream& values);
+	void format_output(int width);
 	friend class SQL_Interpreter;
+	friend class Menu;
 	friend wostream& operator<<(wostream& output, const CommodityData& cd);
+	friend wofstream& operator<<(wofstream& output, const CommodityData& cd);
 };
 
 class OrderData :public Data
@@ -96,8 +102,11 @@ public:
 	int quantity;
 	OrderData();
 	OrderData(wstringstream& values);
+	void format_output(int width);
 	friend class SQL_Interpreter;
+	friend class Menu;
 	friend wostream& operator<<(wostream& output, const OrderData& od);
+	friend wofstream& operator<<(wofstream& output, const OrderData& od);
 };
 
 

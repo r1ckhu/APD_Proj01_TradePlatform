@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "User.h"
 #include <locale>
+#include <iomanip>
 DataHandler datahandler;
 UserHandler userhandler;
 SQL_Interpreter sql_interpreter;
@@ -12,8 +13,11 @@ Calculator calculator;
 locale zh_utf("zh_CN.UTF-8");
 int main()
 {
+	wcout << setiosflags(ios::left);
 	wcout.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
+	wcin.imbue(locale("zh_CN.UTF-8"));
 	setlocale(LC_ALL, "zh_CN.UTF-8");
+	
 	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
 	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
 	// 用户ID, 用户名, 密码, 联系方式, 地址, 钱包余额, 用户状态
@@ -48,7 +52,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM commodity WHERE 上架时间 = 12-30";
+	ws = L"SELECT * FROM commodity WHERE 上架时间 CONTAINS 12-30";
 	lc = (list<CommodityData>*)sql_interpreter.interpret(ws);
 	for (list<CommodityData>::iterator it = lc->begin(); it != lc->end(); it++) {
 		wcout << *it << endl;
@@ -62,7 +66,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM user WHERE 联系方式 = 0";
+	ws = L"SELECT * FROM user WHERE 联系方式 CONTAINS 0";
 	lu = (list<UserData>*)sql_interpreter.interpret(ws);
 	for (list<UserData>::iterator it = lu->begin(); it != lu->end(); it++) {
 		wcout << *it << endl;
@@ -76,7 +80,7 @@ int main()
 		wcout << *it << endl;
 	}
 	cout << endl;
-	ws = L"SELECT * FROM order WHERE 卖家ID = U007";
+	ws = L"SELECT * FROM order WHERE 卖家ID CONTAINS U007";
 	lo = (list<OrderData>*)sql_interpreter.interpret(ws);
 	for (list<OrderData>::iterator it = lo->begin(); it != lo->end(); it++) {
 		wcout << *it << endl;
@@ -116,5 +120,6 @@ int main()
 	UserMenu usermenu;
 	//usermenu.inputloop(ud);
 	defaultmenu.inputloop(ud);
+	
 	return 0;
 }

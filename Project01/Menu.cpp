@@ -1,8 +1,11 @@
 #pragma once
 #include "Menu.h"
 #include "User.h"
+#include <iomanip>
 extern UserHandler userhandler;
+extern SQL_Interpreter sql_interpreter;
 using namespace std;
+const int WIDTH = 10;
 
 void Menu::putnch(char ch, int n, bool changeline)
 {
@@ -18,6 +21,21 @@ void Menu::putnch(wchar_t ch, int n, bool changeline)
 		wprintf(L"%lc", ch);
 	if (changeline)
 		wprintf(L"\n");
+}
+
+void Menu::formatting_output(list<CommodityData>* _list)
+{
+	putnch('*', 100);
+	/*wcout << setw(WIDTH) << L"用户ID" << setw(WIDTH) << L"用户名"
+		<< setw(WIDTH) << L"密码" << setw(WIDTH) << L"联系方式"
+		<< setw(WIDTH) << L"地址" << setw(WIDTH) << L"钱包余额" << setw(WIDTH) << L"用户状态" << endl;*/
+	wcout << setw(WIDTH) << L"商品ID" << setw(WIDTH) << L"名称" << setw(WIDTH) << L"价格" << setw(WIDTH) << L"数量" <<
+		setw(WIDTH) << L"描述" << setw(WIDTH) << L"卖家ID" << setw(WIDTH) << L"上架时间" << setw(WIDTH) << L"商品状态" << endl;
+	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
+	{
+		(*it).format_output(10);
+	}
+	putnch('*', 100);
 }
 
 void DefaultMenu::printMenu()
@@ -46,8 +64,9 @@ void DefaultMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 3) {
-			userhandler.userlogin();
-			continue;
+			user = userhandler.userlogin();
+			UserMenu usermenu;
+			usermenu.inputloop(user);
 		}
 		else if (input == 4) {
 			exit(0);
@@ -59,10 +78,10 @@ void DefaultMenu::inputloop(UserData* user)
 void AdminMenu::printMenu()
 {
 	putnch('=', 100);
-	wcout << L"1.查看所有用户 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销" << endl;
+	wcout << L"1.查看所有商品 2.搜索商品 3.下架商品 4.查看所有订单 5.查看所有用户 6.封禁用户 7.注销" << endl;
 	putnch('=', 100);
 }
-void AdminMenu::inputloop(UserData *user)
+void AdminMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
@@ -70,9 +89,11 @@ void AdminMenu::inputloop(UserData *user)
 		wprintf(L"请输入操作:");
 		cin >> input;
 		if (input == 1) {
+			show_commodity();
 			continue;
 		}
 		else if (input == 2) {
+			search_commodity();
 			continue;
 		}
 		else if (input == 3) {
@@ -88,9 +109,28 @@ void AdminMenu::inputloop(UserData *user)
 			continue;
 		}
 		else if (input == 7) {
+			putnch('\n', 3);
 			return;
 		}
 	}
+}
+
+void AdminMenu::show_commodity()
+{
+	wstring command(L"SELECT * FROM commodity");
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+}
+
+void AdminMenu::search_commodity()
+{
+	wstring name;
+	wprintf(L"请输入商品名称:");
+	wcin >> name;
+	wstring command(L"SELECT * FROM commodity WHERE 名称 CONTAINS ");
+	command += name;
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
 }
 
 void UserMenu::printMenu()
@@ -120,6 +160,7 @@ void UserMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 4) {
+			putnch('\n', 3);
 			return;
 		}
 	}
@@ -159,6 +200,7 @@ void SellerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 6) {
+			putnch('\n', 3);
 			return;
 		}
 	}
@@ -198,6 +240,7 @@ void BuyerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 6) {
+			putnch('\n', 3);
 			return;
 		}
 	}
@@ -229,6 +272,7 @@ void InfoMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 4) {
+			putnch('\n', 3);
 			return;
 		}
 	}

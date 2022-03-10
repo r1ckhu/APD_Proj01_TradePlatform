@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 const string fpath_user = "data\\user.txt";
 const string fpath_commodity = "data\\commodity.txt";
@@ -142,7 +143,7 @@ DataHandler::DataHandler()
 
 	if (!in_user) {
 		wofstream out_user(fpath_user, ios::out);
-		out_user.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		out_user.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_user << user_attribute << endl;
 		out_user.close();
 	}
@@ -165,7 +166,7 @@ DataHandler::DataHandler()
 
 	if (!in_commodity) {
 		wofstream out_commodity(fpath_commodity, ios::out);
-		out_commodity.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		out_commodity.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_commodity << commodity_attribute << endl;
 		out_commodity.close();
 	}
@@ -188,7 +189,7 @@ DataHandler::DataHandler()
 
 	if (!in_order) {
 		wofstream out_order(fpath_order, ios::out);
-		out_order.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		out_order.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_order << order_attribute << endl;
 		out_order.close();
 	}
@@ -233,6 +234,25 @@ wostream& operator<<(wostream& output, const UserData& ud)
 	return output;
 }
 
+wofstream& operator<<(wofstream& output, const UserData& ud)
+{
+	output << ud.id << ',' << ud.name << ',' << ud.password << ',' << ud.contact << ',' \
+		<< ud.address << ',' << ud.balance << ',';
+	if (ud.banned)
+		output << L"正常";
+	else
+		output << L"封禁";
+	return output;
+}
+
+void UserData::format_output(int width)
+{
+	wcout << setw(width) << id << setw(width) << name
+		<< setw(width) << contact << setw(width) << address
+		<< setw(width) << balance <<
+		setw(width) << (banned ? L"封禁" : L"正常") << endl;
+}
+
 wostream& operator<<(wostream& output, const CommodityData& cd)
 {
 	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
@@ -241,12 +261,47 @@ wostream& operator<<(wostream& output, const CommodityData& cd)
 	return output;
 }
 
+wofstream& operator<<(wofstream& output, const CommodityData& cd)
+{
+	output << cd.id << ',' << cd.name << ',' << cd.price << ',' << cd.quantity << ',' << cd.description\
+		<< ',' << cd.seller_id << ',' << cd.time_on_shelf << ',';
+	if (cd.commodity_state == ON_SELL)
+		output << L"销售中";
+	else if (cd.commodity_state == OFF_SHELF)
+		output << L"已下架";
+	return output;
+}
+
+void CommodityData::format_output(int width)
+{
+	wcout << setw(width) << id << setw(width) << name
+		<< setw(width) << price << setw(width) << quantity
+		<< setw(width) << description << setw(width) << seller_id
+		<< setw(width) << time_on_shelf << setw(width)
+		<< setw(width) << (commodity_state == ON_SELL ? L"销售中" : L"已下架") << endl;
+}
+
 wostream& operator<<(wostream& output, const OrderData& od)
 {
 	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
 	output << od.id << ' ' << od.commodity_id << ' ' << od.price << ' ' << od.quantity << ' '\
 		<< od.seller_id << ' ' << od.buyer_id;
 	return output;
+}
+
+wofstream& operator<<(wofstream& output, const OrderData& od)
+{
+	output << od.id << ',' << od.commodity_id << ',' << od.price << ',' << od.quantity << ',' \
+		<< od.time << ',' << od.seller_id << ',' << od.buyer_id;
+	return output;
+}
+
+void OrderData::format_output(int width)
+{
+	wcout << setw(width) << id << setw(width) << commodity_id
+		<< setw(width) << price << setw(width) << quantity
+		<< setw(width) << time << setw(width) << seller_id
+		<< setw(width) << buyer_id << endl;
 }
 
 OrderData::OrderData()

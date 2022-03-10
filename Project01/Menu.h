@@ -7,6 +7,9 @@ public:
 	virtual void printMenu() = 0;
 	void putnch(char ch, int n, bool changeline = true);
 	void putnch(wchar_t wch, int n, bool changeline = true);
+	void formatting_output(list<CommodityData>* _list);
+	void formatting_output(list<UserData>* _list);
+	void formatting_output(list<OrderData>* _list);
 };
 
 class DefaultMenu : public Menu
@@ -21,6 +24,12 @@ class AdminMenu : public Menu
 public:
 	void printMenu();
 	void inputloop(UserData* user);
+	void show_commodity();
+	void search_commodity();
+	void remove_commodity();
+	void show_orders();
+	void show_users();
+	void ban_user();
 };
 
 class UserMenu : public Menu

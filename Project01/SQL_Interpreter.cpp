@@ -270,9 +270,9 @@ void SQL_Interpreter::update_row(wstringstream& values, UserData& dst)
 
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring& col, wstring& val, CommodityData& tar)
 {
-	if (col == L"商品ID" && tar.id == val)
+	if (col == L"商品ID" && val.find(tar.id) != wstring::npos)
 		return true;
-	else if (col == L"名称" && tar.name == val)
+	else if (col == L"名称" && val.find(tar.name) != wstring::npos)
 		return true;
 	else if (col == L"价格") {
 		float p = 0.0;
@@ -328,9 +328,9 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring
 }
 bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring val, UserData& tar)
 {
-	if (col == L"用户ID" && tar.id == val)
+	if (col == L"用户ID" && val.find(tar.id) != wstring::npos)
 		return true;
-	else if (col == L"用户名" && tar.name == val)
+	else if (col == L"用户名" && val.find(tar.name) != wstring::npos)
 		return true;
 	else if (col == L"联系方式")
 	{
@@ -364,7 +364,7 @@ void SQL_Interpreter::appendfile(CommodityData& cd)
 {
 	// 商品ID, 名称, 价格, 数量, 描述, 卖家ID, 上架时间, 商品状态
 	wofstream output(fpath_commodity, ios::app);
-	output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << cd.id << ',' << cd.name << ',' << cd.price << ',' << cd.quantity << ',' << cd.description\
 		<< ',' << cd.seller_id << ',' << cd.time_on_shelf << ',';
 	if (cd.commodity_state == ON_SELL)
@@ -377,7 +377,7 @@ void SQL_Interpreter::appendfile(UserData& ud)
 {
 	// 用户ID, 用户名, 密码, 联系方式, 地址, 钱包余额, 用户状态
 	wofstream output(fpath_user, ios::app);
-	output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << ud.id << ',' << ud.name << ',' << ud.password << ',' << ud.contact << ',' \
 		<< ud.address << ',' << ud.balance << ',';
 	if (ud.banned)
@@ -390,9 +390,9 @@ void SQL_Interpreter::appendfile(OrderData& od)
 {
 	// 订单ID, 商品ID, 交易单价, 数量, 交易时间, 卖家ID, 买家ID
 	wofstream output(fpath_order, ios::app);
-	output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+	output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	output << od.id << ',' << od.commodity_id << ',' << od.price << ',' << od.quantity << ',' \
-		<< od.time << ',' << od.seller_id << ',' << od.buyer_id<<endl;
+		<< od.time << ',' << od.seller_id << ',' << od.buyer_id << endl;
 	output.close();
 }
 void SQL_Interpreter::writefile(DATA_TYPES dt)
@@ -400,16 +400,17 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 	if (dt == COMMODITY) {
 		Table<CommodityData>* table = datahandler.get_commodity_table();
 		wofstream output(fpath_commodity, ios::out);
-		output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		output << commodity_attribute << endl;
 		for (list<CommodityData>::iterator it = table->_list.begin(); \
 			it != table->_list.end(); it++) {
-			output << (*it).id << ',' << (*it).name << ',' << (*it).price << ',' << (*it).quantity << ',' << (*it).description\
+			/*output << (*it).id << ',' << (*it).name << ',' << (*it).price << ',' << (*it).quantity << ',' << (*it).description\
 				<< ',' << (*it).seller_id << ',' << (*it).time_on_shelf << ',';
 			if ((*it).commodity_state == ON_SELL)
 				output << L"销售中" << endl;
 			else if ((*it).commodity_state == OFF_SHELF)
-				output << L"已下架" << endl;
+				output << L"已下架" << endl;*/
+			output << (*it) << endl;
 		}
 		output.close();
 		return;
@@ -417,16 +418,17 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 	else if (dt == USER) {
 		Table<UserData>* table = datahandler.get_user_table();
 		wofstream output(fpath_user, ios::out);
-		output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		output << user_attribute << endl;
 		for (list<UserData>::iterator it = table->_list.begin(); \
 			it != table->_list.end(); it++) {
-			output << (*it).id << ',' << (*it).name << ',' << (*it).password << ',' << (*it).contact << ',' \
+			/*output << (*it).id << ',' << (*it).name << ',' << (*it).password << ',' << (*it).contact << ',' \
 				<< (*it).address << ',' << (*it).balance << ',';
 			if ((*it).banned)
 				output << L"正常" << endl;
 			else
-				output << L"封禁" << endl;
+				output << L"封禁" << endl;*/
+			output << (*it) << endl;
 		}
 		output.close();
 		return;
@@ -434,12 +436,13 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 	else if (dt == ORDER) {
 		Table<OrderData>* table = datahandler.get_order_table();
 		wofstream output(fpath_order, ios::out);
-		output.imbue(locale(zh_utf,new std::numpunct<wchar_t>));
+		output.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		output << order_attribute << endl;
 		for (list<OrderData>::iterator it = table->_list.begin(); \
 			it != table->_list.end(); it++) {
-			output << (*it).id << ',' << (*it).commodity_id << ',' << (*it).price << ',' << (*it).quantity << ',' \
-				<< (*it).time << ',' << (*it).seller_id << ',' << (*it).buyer_id << endl;
+			/*output << (*it).id << ',' << (*it).commodity_id << ',' << (*it).price << ',' << (*it).quantity << ',' \
+				<< (*it).time << ',' << (*it).seller_id << ',' << (*it).buyer_id << endl;*/
+			output << (*it) << endl;
 		}
 		output.close();
 		return;

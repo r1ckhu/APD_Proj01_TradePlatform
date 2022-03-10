@@ -31,6 +31,7 @@ UserData* UserHandler::userlogin()
 	wprintf(L"请输入用户名:");
 	wcin >> name;
 	wprintf(L"请输入密码:");
+	wcin >> password;
 	Table<UserData>* usertable = datahandler.get_user_table();
 	for (list<UserData>::iterator it = usertable->_list.begin(); it != usertable->_list.end(); it++)
 	{
