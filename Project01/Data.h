@@ -135,5 +135,11 @@ public:
 	Table<CommodityData>* get_commodity_table();
 	Table<UserData>* get_user_table();
 	Table<OrderData>* get_order_table();
+	wstring generate_commodity_id();
+	wstring generate_user_id();
+	wstring generate_order_id();
+	wstring get_current_time(bool concise = false);
 };
+
+
 

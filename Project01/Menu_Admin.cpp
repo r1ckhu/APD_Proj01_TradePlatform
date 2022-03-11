@@ -1,3 +1,4 @@
+#pragma once
 #include "Menu.h"
 #include "User.h"
 using namespace std;
@@ -43,6 +44,7 @@ void AdminMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 6) {
+			ban_user();
 			continue;
 		}
 		else if (input == 7) {
@@ -67,6 +69,7 @@ void AdminMenu::search_commodity()
 	command += name;
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
+	delete _list;
 }
 
 void AdminMenu::remove_commodity()
@@ -94,6 +97,7 @@ void AdminMenu::remove_commodity()
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
+	delete _list;
 }
 
 void AdminMenu::show_orders()
@@ -108,4 +112,35 @@ void AdminMenu::show_users()
 	wstring command(L"SELECT * FROM user");
 	list<UserData>* _list = (list<UserData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
+}
+
+void AdminMenu::ban_user()
+{
+	wstring id;
+	wprintf(L"Please enter a user's id:");
+	wcin >> id;
+	wstring command(L"SELECT * FROM user WHERE userID CONTAINS ");
+	command += id;
+	wprintf(L"This is the user you select:\n");
+	list<UserData>* _list = (list<UserData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+	if (_list->size() != 0)
+	{
+		wprintf(L"Please Confirm your choice (y/n):");
+		wchar_t sign;
+		wcin >> sign;
+		if (sign == 'y') {
+			command = L"UPDATE user SET userState = inactive WHERE userID = ";
+			command += id;
+			sql_interpreter.interpret(command);
+			wprintf(L"Operation Successful!\n\n");
+			command = L"UPDATE commodity SET state = offShelf WHERE sellerID = ";
+			command += id;
+			sql_interpreter.interpret(command);
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	delete _list;
 }

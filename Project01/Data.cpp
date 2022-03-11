@@ -1,10 +1,12 @@
 #pragma once
+#pragma warning( disable : 4996)
 #include "Data.h"
 #include "StringOperator.h"
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <ctime>
 using namespace std;
 const string fpath_user = "data\\user.txt";
 const string fpath_commodity = "data\\commodity.txt";
@@ -226,6 +228,59 @@ Table<OrderData>* DataHandler::get_order_table()
 	return &orderTable;
 }
 
+wstring DataHandler::generate_commodity_id()
+{
+	wstringstream wss;
+	if (commodityTable.cnt < 10)
+		wss << "M00" << commodityTable.cnt;
+	else if(commodityTable.cnt < 100)
+		wss << "M0" << commodityTable.cnt;
+	else
+		wss << "M" << commodityTable.cnt;
+	wstring id;
+	wss >> id;
+	return id;
+}
+
+wstring DataHandler::generate_user_id()
+{
+	wstringstream wss;
+	if (userTable.cnt < 10)
+		wss << "U00" << userTable.cnt;
+	else if (userTable.cnt < 100)
+		wss << "U0" << userTable.cnt;
+	else
+		wss << "U" << userTable.cnt;
+	wstring id;
+	wss >> id;
+	return id;
+}
+
+wstring DataHandler::generate_order_id()
+{
+	wstringstream wss;
+	if (orderTable.cnt < 10)
+		wss << "T00" << orderTable.cnt;
+	else if (orderTable.cnt < 100)
+		wss << "T0" << orderTable.cnt;
+	else
+		wss << "T" << orderTable.cnt;
+	wstring id;
+	wss >> id;
+	return id;
+}
+
+wstring DataHandler::get_current_time(bool concise)
+{
+	time_t now = time(0);
+	tm* gmtm = gmtime(&now);
+	wstringstream wss;
+	wss << (gmtm->tm_year + 1900) << '-' << (gmtm->tm_mon) << '-' << (gmtm->tm_mday);
+	wstring time;
+	wss >> time;
+	return time;
+}
+
 wostream& operator<<(wostream& output, const UserData& ud)
 {
 	// userID, username, password, phoneNumber, address, balance, userState
@@ -238,7 +293,7 @@ wofstream& operator<<(wofstream& output, const UserData& ud)
 {
 	output << ud.id << ',' << ud.name << ',' << ud.password << ',' << ud.contact << ',' \
 		<< ud.address << ',' << ud.balance << ',';
-	if (ud.banned)
+	if (!ud.banned)
 		output << L"active";
 	else
 		output << L"inactive";

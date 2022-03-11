@@ -98,8 +98,11 @@ void DefaultMenu::inputloop(UserData* user)
 		}
 		else if (input == 3) {
 			user = userhandler.userlogin();
-			UserMenu usermenu;
-			usermenu.inputloop(user);
+			if (user != nullptr) {
+				UserMenu usermenu;
+				usermenu.inputloop(user);
+			}
+
 		}
 		else if (input == 4) {
 			exit(0);

@@ -1,3 +1,4 @@
+#pragma once
 #include "Menu.h"
 #include "User.h"
 using namespace std;
