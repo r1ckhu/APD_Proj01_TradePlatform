@@ -247,7 +247,7 @@ wofstream& operator<<(wofstream& output, const UserData& ud)
 
 void UserData::format_output(int width)
 {
-	wcout << setw(width) << id << setw(width) << name
+	wcout << setw(width) << id << setw(width) << name << setw(width) << password
 		<< setw(width) << contact << setw(width) << address
 		<< setw(width) << balance <<
 		setw(width) << (banned ? L"inactive" : L"active") << endl;

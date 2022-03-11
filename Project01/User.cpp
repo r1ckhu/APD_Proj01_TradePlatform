@@ -7,12 +7,12 @@ extern DataHandler datahandler;
 UserData* UserHandler::adminlogin()
 {
 	wstring name, password;
-	wprintf(L"请输入管理员username:");
+	wprintf(L"Please enter admin username:");
 	wcin >> name;
-	wprintf(L"请输入管理员password:");
+	wprintf(L"Please enter admin password:");
 	wcin >> password;
 	if (name != L"admin" || password != L"123456") {
-		wprintf(L"---username或password错误，返回主菜单---\n\n");
+		wprintf(L"---username or password wrong，return to the main menu now---\n\n");
 		return nullptr;
 	}
 	else {
@@ -20,7 +20,7 @@ UserData* UserHandler::adminlogin()
 		user->name = L"admin";
 		user->set_user_type(ADMIN);
 		user->set_password(L"123456");
-		wprintf(L"---登陆成功---\n\n");
+		wprintf(L"---Login Successful---\n\n");
 		return user;
 	}
 }
@@ -28,19 +28,19 @@ UserData* UserHandler::adminlogin()
 UserData* UserHandler::userlogin()
 {
 	wstring name, password;
-	wprintf(L"请输入username:");
+	wprintf(L"Please enter username:");
 	wcin >> name;
-	wprintf(L"请输入password:");
+	wprintf(L"Please enter password:");
 	wcin >> password;
 	Table<UserData>* usertable = datahandler.get_user_table();
 	for (list<UserData>::iterator it = usertable->_list.begin(); it != usertable->_list.end(); it++)
 	{
 		if (it->name == name && it->get_password() == password)
 		{
-			wprintf(L"---登陆成功---\n\n");
+			wprintf(L"---Login Successful---\n\n");
 			return &(*it);
 		}
 	}
-	wprintf(L"---username或password错误，返回主菜单---\n\n");
+	wprintf(L"---username or password wrong，return to the main menu now---\n\n");
 	return nullptr;
 }
