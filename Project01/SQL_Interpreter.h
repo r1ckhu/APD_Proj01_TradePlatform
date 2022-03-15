@@ -20,7 +20,10 @@ class SQL_Interpreter
 {
 public:
 	void* interpret(wstring& statement);
+	void log(wstring& command);
+	SQL_Interpreter();
 private:
+	wofstream in_commodity, in_user, in_order, in_command;
 	template <typename T>
 	T insert(wstringstream& values, Table<T>* table);
 	template<typename T>

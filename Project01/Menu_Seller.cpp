@@ -31,19 +31,19 @@ void SellerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 2) {
-			//show_commodity(user);
+			show_commodity(user);
 			continue;
 		}
 		else if (input == 3) {
-			//modify_commodity(user);
+			modify_commodity(user);
 			continue;
 		}
 		else if (input == 4) {
-			//remove_commodity(user);
+			remove_commodity(user);
 			continue;
 		}
 		else if (input == 5) {
-			//show_history(user);
+			show_history(user);
 			continue;
 		}
 		else if (input == 6) {
@@ -77,14 +77,128 @@ void SellerMenu::put_commodity(UserData* user)
 	if (sign == 'y') {
 		wstringstream wss;
 		wss << L"INSERT INTO commodity VALUES (" << datahandler.generate_commodity_id() \
-			<<',' << name << ',' << price << ',' << \
+			<< ',' << name << ',' << price << ',' << \
 			quantity << ',' << description << ',' \
-			<< user->get_id() << ',' << datahandler.get_current_time() << ',' <<"onSale"<<')';
+			<< user->get_id() << ',' << datahandler.get_current_time() << ',' << "onSale" << ')';
 		command = wss.str();
 		sql_interpreter.interpret(command);
+		sql_interpreter.log(command);
 		wprintf(L"Operation Successful!\n\n");
 	}
 	else {
 		wprintf(L"Operation Terminated!\n\n");
 	}
+}
+
+void SellerMenu::show_commodity(UserData* user)
+{
+	// TODO: Dismatched command
+	wstring command(L"SELECT * FROM commodity WHERE sellerID CONTAINS ");
+	command += user->get_id();
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+	command = L"SELECT * FROM commodity";
+	sql_interpreter.log(command);
+	delete _list;
+}
+
+void SellerMenu::modify_commodity(UserData* user)
+{
+	wstring command;
+	wstring id, description;
+	float price = 0.0;
+	wchar_t sign;
+	wprintf(L"Please enter the commodity's id:");
+	wcin >> id;
+	wprintf(L"Please the attribute to be modified ( 1 for Price / 2 for Description):");
+	wcin >> sign;
+	if (sign == '1') {
+		wprintf(L"Please enter new price:");
+		wcin >> price;
+		// Dismatched output
+		putnch('*', 25);
+		wcout << L"The commodity to be modified 's ID: " << id << endl;
+		wcout << L"The new price: " << price << endl;;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		wcin >> sign;
+		if (sign == 'y') {
+			wstringstream wss;
+			wss << L"UPDATE commodity SET price = " << price << " WHERE commodityID = "
+				<< id;
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	else if (sign == '2') {
+		wprintf(L"Please enter description:");
+		wcin >> description;
+		putnch('*', 25);
+		wcout << L"The commodity to be modified 's ID: " << id << endl;
+		wcout << L"The new description: " << description << endl;;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		wcin >> sign;
+		if (sign == 'y') {
+			wstringstream wss;
+			wss << L"UPDATE commodity SET description = " << description << " WHERE commodityID = "
+				<< id;
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	else {
+		wprintf(L"Invaild Input! Operation Terminated.");
+	}
+}
+
+void SellerMenu::remove_commodity(UserData* user)
+{
+	// TODO: need to confirm is seller's product
+	wstring id;
+	wprintf(L"Please enter a commodity's id:");
+	wcin >> id;
+	wstring command(L"SELECT * FROM commodity WHERE commodityID CONTAINS ");
+	command += id;
+	wprintf(L"This is the commodity you select:\n");
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+	if (_list->size() != 0)
+	{
+		wprintf(L"Please Confirm your choice (y/n):");
+		wchar_t sign;
+		wcin >> sign;
+		if (sign == 'y') {
+			command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
+			command += id;
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	delete _list;
+}
+
+void SellerMenu::show_history(UserData *user)
+{
+	// Dismatched command 
+	wstring command(L"SELECT * FROM order WHERE sellerID CONTAINS" +user->get_id());
+	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+	command = L"SELECT * FROM order";
+	sql_interpreter.log(command);
+	delete _list;
 }

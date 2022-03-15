@@ -23,7 +23,26 @@ void Menu::putnch(wchar_t ch, int n, bool changeline)
 		wprintf(L"\n");
 }
 
-void Menu::formatting_output(list<CommodityData>* _list)
+void Menu::formatting_output(list<CommodityData>* _list, bool onlyOnSale)
+{
+	if (_list->size() == 0) {
+		wprintf(L"No Commodity Found!\n");
+		return;
+	}
+	putnch('*', 100);
+	wcout << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"commodityName" << setw(WIDTH) << L"price" << setw(WIDTH) << L"number" <<
+		setw(WIDTH) << L"description" << setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
+	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
+	{
+		if (onlyOnSale && (*it).commodity_state == ON_SELL)
+			(*it).format_output(15);
+		else if (!onlyOnSale)
+			(*it).format_output(15);
+	}
+	putnch('*', 100);
+}
+
+void Menu::formatting_output(list<CommodityData>* _list, UserData* user)
 {
 	if (_list->size() == 0) {
 		wprintf(L"No Commodity Found!\n");

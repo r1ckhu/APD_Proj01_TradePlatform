@@ -9,6 +9,7 @@ using namespace std;
 extern const string fpath_commodity;
 extern const string fpath_order;
 extern const string fpath_user;
+extern const string fpath_command;
 extern const wstring user_attribute;
 extern const wstring order_attribute;
 extern const wstring commodity_attribute;
@@ -117,6 +118,7 @@ private:
 	int cnt = 0;
 	list<T> _list;
 public:
+	T find(const wstring& tar);
 	friend class SQL_Interpreter;
 	friend class UserHandler;
 	friend class DataHandler;
@@ -131,14 +133,14 @@ private:
 	Table<OrderData> orderTable;
 
 public:
-	DataHandler(); // TODO
+	DataHandler(); //TODO:Set fstream static
 	Table<CommodityData>* get_commodity_table();
 	Table<UserData>* get_user_table();
 	Table<OrderData>* get_order_table();
 	wstring generate_commodity_id();
 	wstring generate_user_id();
 	wstring generate_order_id();
-	wstring get_current_time(bool concise = false);
+	wstring get_current_time(bool concise = true);
 };
 
 

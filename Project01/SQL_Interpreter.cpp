@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <locale>
+#include <ctime>
 using namespace std;
 extern DataHandler datahandler;
 extern locale zh_utf;
@@ -118,6 +119,11 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 	else
 		cout << "Invalid SQL statement!" << endl;
 	return nullptr;
+}
+
+SQL_Interpreter::SQL_Interpreter()
+{
+	in_command.open(fpath_command, ios::app);
 }
 
 template<typename T>
@@ -447,4 +453,9 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 		output.close();
 		return;
 	}
+}
+
+void SQL_Interpreter::log(wstring& command)
+{
+	in_command << datahandler.get_current_time(false) << L": " << command << endl;
 }

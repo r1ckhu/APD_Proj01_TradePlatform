@@ -8,7 +8,7 @@ void AdminMenu::printMenu()
 {
 	putnch('\n', 2);
 	putnch('=', 100);
-	wcout << L"1.View All Commodities 2.Search Commodities 3.Remove Commodity 4.View All Orders 5.View All Users 6.Ban Users 7.Logout" << endl;
+	wcout << L"1.View All Commodities 2.Search Commodities 3.Remove Commodity 4.View All Orders 5.View All Users 6.Ban Users 7.Sign Out" << endl;
 	putnch('=', 100);
 }
 void AdminMenu::inputloop(UserData* user)
@@ -56,6 +56,7 @@ void AdminMenu::inputloop(UserData* user)
 void AdminMenu::show_commodity()
 {
 	wstring command(L"SELECT * FROM commodity");
+	sql_interpreter.log(command);
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
 }
@@ -68,6 +69,7 @@ void AdminMenu::search_commodity()
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	sql_interpreter.log(command);
 	formatting_output(_list);
 	delete _list;
 }
@@ -84,6 +86,7 @@ void AdminMenu::remove_commodity()
 	formatting_output(_list);
 	if (_list->size() != 0)
 	{
+		sql_interpreter.log(command);
 		wprintf(L"Please Confirm your choice (y/n):");
 		wchar_t sign;
 		wcin >> sign;
@@ -104,6 +107,7 @@ void AdminMenu::show_orders()
 {
 	wstring command(L"SELECT * FROM order");
 	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
+	sql_interpreter.interpret(command);
 	formatting_output(_list);
 }
 
@@ -111,6 +115,7 @@ void AdminMenu::show_users()
 {
 	wstring command(L"SELECT * FROM user");
 	list<UserData>* _list = (list<UserData>*)sql_interpreter.interpret(command);
+	sql_interpreter.interpret(command);
 	formatting_output(_list);
 }
 
@@ -126,6 +131,7 @@ void AdminMenu::ban_user()
 	formatting_output(_list);
 	if (_list->size() != 0)
 	{
+		sql_interpreter.interpret(command);
 		wprintf(L"Please Confirm your choice (y/n):");
 		wchar_t sign;
 		wcin >> sign;

@@ -25,7 +25,7 @@ void BuyerMenu::inputloop(UserData* user)
 		wprintf(L"Please choose an operation:");
 		cin >> input;
 		if (input == 1) {
-			//show_commodity(user);
+			show_commodity(user);
 			continue;
 		}
 		else if (input == 2) {
@@ -33,11 +33,11 @@ void BuyerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 3) {
-			//search_commodity(user);
+			search_commodity(user);
 			continue;
 		}
 		else if (input == 4) {
-			//show_history(user);
+			show_history(user);
 			continue;
 		}
 		else if (input == 5) {
@@ -49,3 +49,42 @@ void BuyerMenu::inputloop(UserData* user)
 		}
 	}
 }
+
+void BuyerMenu::show_commodity(UserData* user)
+{
+	wstring command(L"SELECT * FROM commodity");
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	sql_interpreter.interpret(command);
+	sql_interpreter.log(command);
+	formatting_output(_list, true);
+}
+
+void BuyerMenu::buy_commodity(UserData* user)
+{
+	// TODO: datahandler need get commodity funciton
+}
+
+void BuyerMenu::search_commodity(UserData* user)
+{
+	wstring name;
+	wprintf(L"Please enter a commodity's name:");
+	wcin >> name;
+	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
+	command += name;
+	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	formatting_output(_list, true);
+	sql_interpreter.interpret(command);
+	delete _list;
+}
+
+void BuyerMenu::show_history(UserData* user)
+{
+	// Dismatched command 
+	wstring command(L"SELECT * FROM order WHERE buyerID CONTAINS" + user->get_id());
+	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
+	formatting_output(_list);
+	command = L"SELECT * FROM order";
+	sql_interpreter.log(command);
+	delete _list;
+}
+

@@ -11,6 +11,7 @@ using namespace std;
 const string fpath_user = "data\\user.txt";
 const string fpath_commodity = "data\\commodity.txt";
 const string fpath_order = "data\\order.txt";
+const string fpath_command = "data\\commands.txt";
 const wstring user_attribute = L"userID,username,password,phoneNumber,address,balance,userState";
 const wstring commodity_attribute = L"commodityID,commodityName,price,number,description,sellerID,addedDate,state";
 const wstring order_attribute = L"orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
@@ -233,7 +234,7 @@ wstring DataHandler::generate_commodity_id()
 	wstringstream wss;
 	if (commodityTable.cnt < 10)
 		wss << "M00" << commodityTable.cnt;
-	else if(commodityTable.cnt < 100)
+	else if (commodityTable.cnt < 100)
 		wss << "M0" << commodityTable.cnt;
 	else
 		wss << "M" << commodityTable.cnt;
@@ -275,9 +276,36 @@ wstring DataHandler::get_current_time(bool concise)
 	time_t now = time(0);
 	tm* gmtm = gmtime(&now);
 	wstringstream wss;
-	wss << (gmtm->tm_year + 1900) << '-' << (gmtm->tm_mon) << '-' << (gmtm->tm_mday);
 	wstring time;
-	wss >> time;
+	wss << (gmtm->tm_year + 1900) << '-';
+	if (gmtm->tm_mon < 10)
+		wss << '0' << gmtm->tm_mon << '-';
+	else
+		wss << gmtm->tm_mon << '-';
+
+	if (gmtm->tm_mday < 10)
+		wss << '0' << gmtm->tm_mday;
+	else
+		wss << gmtm->tm_mday;
+	if (!concise)
+	{
+		wss << ' ';
+		if (gmtm->tm_hour < 10)
+			wss << '0' << gmtm->tm_hour << ':';
+		else
+			wss << gmtm->tm_hour << ':';
+
+		if (gmtm->tm_min < 10)
+			wss << '0' << gmtm->tm_min << ':';
+		else
+			wss << gmtm->tm_min << ':';
+
+		if (gmtm->tm_sec < 10)
+			wss << '0' << gmtm->tm_sec;
+		else
+			wss << gmtm->tm_sec;
+	}
+	time = wss.str();
 	return time;
 }
 
@@ -374,4 +402,15 @@ OrderData::OrderData(wstringstream& values)
 	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
 	values >> id >> commodity_id >> price >> quantity \
 		>> time >> seller_id >> buyer_id;
+}
+
+template<typename T>
+T Table<T>::find(const wstring& tar)
+{
+	typename list<T>::iterator it;
+	for (it = _list.begin(); it != _list.end(); it++)
+	{
+		if ((*it).id == tar)
+			return *it;
+	}
 }
