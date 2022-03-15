@@ -114,7 +114,7 @@ int main()
 	exp = "(2 + 4 * 3.5) * 6";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
-
+	wstring id = L"M001";
 	UserData* ud = nullptr;
 	DefaultMenu defaultmenu;
 	UserMenu usermenu;

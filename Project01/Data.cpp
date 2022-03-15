@@ -16,6 +16,8 @@ const wstring user_attribute = L"userID,username,password,phoneNumber,address,ba
 const wstring commodity_attribute = L"commodityID,commodityName,price,number,description,sellerID,addedDate,state";
 const wstring order_attribute = L"orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
 extern locale zh_utf;
+
+
 wstring& Data::get_id()
 {
 	return id;
@@ -232,6 +234,7 @@ Table<OrderData>* DataHandler::get_order_table()
 wstring DataHandler::generate_commodity_id()
 {
 	wstringstream wss;
+	commodityTable.cnt++;
 	if (commodityTable.cnt < 10)
 		wss << "M00" << commodityTable.cnt;
 	else if (commodityTable.cnt < 100)
@@ -246,6 +249,7 @@ wstring DataHandler::generate_commodity_id()
 wstring DataHandler::generate_user_id()
 {
 	wstringstream wss;
+	userTable.cnt++;
 	if (userTable.cnt < 10)
 		wss << "U00" << userTable.cnt;
 	else if (userTable.cnt < 100)
@@ -260,6 +264,7 @@ wstring DataHandler::generate_user_id()
 wstring DataHandler::generate_order_id()
 {
 	wstringstream wss;
+	orderTable.cnt++;
 	if (orderTable.cnt < 10)
 		wss << "T00" << orderTable.cnt;
 	else if (orderTable.cnt < 100)
@@ -275,6 +280,7 @@ wstring DataHandler::get_current_time(bool concise)
 {
 	time_t now = time(0);
 	tm* gmtm = gmtime(&now);
+	gmtm->tm_mon += 1;
 	wstringstream wss;
 	wstring time;
 	wss << (gmtm->tm_year + 1900) << '-';
@@ -404,13 +410,3 @@ OrderData::OrderData(wstringstream& values)
 		>> time >> seller_id >> buyer_id;
 }
 
-template<typename T>
-T Table<T>::find(const wstring& tar)
-{
-	typename list<T>::iterator it;
-	for (it = _list.begin(); it != _list.end(); it++)
-	{
-		if ((*it).id == tar)
-			return *it;
-	}
-}

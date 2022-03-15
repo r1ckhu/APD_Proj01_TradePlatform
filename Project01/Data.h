@@ -118,7 +118,16 @@ private:
 	int cnt = 0;
 	list<T> _list;
 public:
-	T find(const wstring& tar);
+	T* find(wstring& tar)
+	{
+		typename list<T>::iterator it;
+		for (it = _list.begin(); it != _list.end(); it++)
+		{
+			if ((*it).get_id() == tar)
+				return &*it;
+		}
+		return nullptr;
+	}
 	friend class SQL_Interpreter;
 	friend class UserHandler;
 	friend class DataHandler;
