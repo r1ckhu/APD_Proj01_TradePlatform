@@ -44,7 +44,7 @@ void BuyerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 5) {
-			//show_detail(user);
+			show_detail(user);
 			continue;
 		}
 		else if (input == 6) {
@@ -72,7 +72,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 	wprintf(L"Please enter the quantity:");
 	wcin >> quantity;
 	Table<CommodityData>* table = datahandler.get_commodity_table();
-	CommodityData* cd = table->find(id);
+	CommodityData* cd = table->find_byID(id);
 	if (cd != nullptr)
 	{
 		if (user->get_balance() < cd->get_price() * quantity) {
@@ -107,7 +107,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 		{
 			user->set_balance(user->get_balance() - cd->get_price() * quantity);
 			wstringstream wss;
-			wss << L"INSERT INTO order VALUES ("<< datahandler.generate_order_id() << ',' \
+			wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
 				<< id << ',' << cd->get_price() << ','\
 				<< cd->get_quantity() - quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
 				<< ',' << user->get_id() << ')';
@@ -161,3 +161,18 @@ void BuyerMenu::show_history(UserData* user)
 	delete _list;
 }
 
+void BuyerMenu::show_detail(UserData* user)
+{
+	wstring id;
+	wprintf(L"Please enter the commodityID:");
+	wcin >> id;
+	CommodityData* cd = datahandler.get_commodity_table()->find_byID(id);
+	putnch('*', 30);
+	wcout << L"The commodity ID is: " << cd->get_id() << endl;
+	wcout << L"The commodity name is: " << cd->name << endl;
+	wcout << L"The commodity description is: " << cd->description << endl;
+	wcout << L"On sell time is: " << cd->time_on_shelf << endl;
+	wcout << L"The price is: " << cd->get_price() << endl;
+	wcout << L"The seller ID is:" << cd->get_seller_id() << endl;
+	putnch('*', 30);
+}

@@ -10,6 +10,7 @@ extern const string fpath_commodity;
 extern const string fpath_order;
 extern const string fpath_user;
 extern const string fpath_command;
+extern const string fpath_balance;
 extern const wstring user_attribute;
 extern const wstring order_attribute;
 extern const wstring commodity_attribute;
@@ -118,12 +119,22 @@ private:
 	int cnt = 0;
 	list<T> _list;
 public:
-	T* find(wstring& tar)
+	T* find_byID(wstring& tar)
 	{
 		typename list<T>::iterator it;
 		for (it = _list.begin(); it != _list.end(); it++)
 		{
 			if ((*it).get_id() == tar)
+				return &*it;
+		}
+		return nullptr;
+	}
+	T* find_byName(wstring& tar)
+	{
+		typename list<T>::iterator it;
+		for (it = _list.begin(); it != _list.end(); it++)
+		{
+			if ((*it).name.find(tar) != wstring::npos)
 				return &*it;
 		}
 		return nullptr;

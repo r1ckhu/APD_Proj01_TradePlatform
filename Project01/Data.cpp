@@ -12,6 +12,7 @@ const string fpath_user = "data\\user.txt";
 const string fpath_commodity = "data\\commodity.txt";
 const string fpath_order = "data\\order.txt";
 const string fpath_command = "data\\commands.txt";
+const string fpath_balance = "data\\balance.txt";
 const wstring user_attribute = L"userID,username,password,phoneNumber,address,balance,userState";
 const wstring commodity_attribute = L"commodityID,commodityName,price,number,description,sellerID,addedDate,state";
 const wstring order_attribute = L"orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
