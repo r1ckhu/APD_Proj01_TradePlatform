@@ -6,11 +6,11 @@
 #include <iostream>
 using namespace std;
 // TODO: Error handling
-string& Calculator::to_rpn(string& exp, string& dst)
+wstring& Calculator::to_rpn(wstring& exp, wstring& dst)
 {
-	stringstream input, output;
-	stack<char> op_stack;
-	char buffer = ' ';
+	wstringstream input, output;
+	stack<wchar_t> op_stack;
+	wchar_t buffer = ' ';
 	input << exp;
 	while (input >> buffer)
 	{
@@ -68,15 +68,15 @@ string& Calculator::to_rpn(string& exp, string& dst)
 	return dst;
 }
 
-float Calculator::calexp(string& exp)
+float Calculator::calexp(wstring& exp)
 {
 	trim(exp);
-	string rpn;
+	wstring rpn;
 	rpn = to_rpn(exp, rpn);
-	cout << rpn << endl;
+	wcout << rpn << endl;
 	stack<float> num_stack;
-	stringstream ss(rpn);
-	char buffer = ' ';
+	wstringstream ss(rpn);
+	wchar_t buffer = ' ';
 	while (ss >> buffer) {
 		float num = 0;
 		if (buffer >= '0' && buffer <= '9') {
@@ -128,11 +128,11 @@ float Calculator::calexp(string& exp)
 	return num_stack.top();
 }
 
-void Calculator::trim(string& exp)
+void Calculator::trim(wstring& exp)
 {
-	for (int i = 0; i < exp.size(); i++){
-		if (exp[i] == ' '){
-			exp.erase(i,1);
+	for (int i = 0; i < exp.size(); i++) {
+		if (exp[i] == ' ') {
+			exp.erase(i, 1);
 			i--;
 		}
 	}
@@ -144,17 +144,17 @@ void Calculator::trim(string& exp)
 	}
 	if (exp[0] == '-')
 		exp[0] = '~';
-	cout << exp << endl;
+	wcout << exp << endl;
 	return;
 }
 
 
-bool Calculator::is_operator(char ch)
+bool Calculator::is_operator(wchar_t ch)
 {
 	return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '~';
 }
 
-bool Calculator::is_left_associative(char op)
+bool Calculator::is_left_associative(wchar_t op)
 {
 	if (op == '+' || op == '-' || op == '*' || op == '/')
 		return true;
@@ -162,7 +162,7 @@ bool Calculator::is_left_associative(char op)
 		return false;
 }
 
-Precedence Calculator::compare_precedence(char op1, char op2)
+Precedence Calculator::compare_precedence(wchar_t op1, wchar_t op2)
 {
 	int p1 = 0, p2 = 0;
 	if (op1 == '~')

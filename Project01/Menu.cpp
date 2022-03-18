@@ -112,8 +112,7 @@ void DefaultMenu::inputloop(UserData* user)
 			}
 		}
 		else if (input == 2) {
-			// TODO: user register
-			continue;
+			userhandler.userRegister();
 		}
 		else if (input == 3) {
 			user = userhandler.userlogin();

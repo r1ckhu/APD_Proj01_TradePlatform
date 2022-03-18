@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Calculator">
+    <Position X="14" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAIAAAICAAAAgAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Calculator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Data">
+    <Position X="7.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAQgA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserData">
+    <Position X="3.75" Y="9.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAwBAAAAAEAAAAAAAgIAAIABAAEAAAAEgAIIAE=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CommodityData">
+    <Position X="6.5" Y="9.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAgAICCAAgAIAEAAgAAgAgABACAAAAQAAAAIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OrderData">
+    <Position X="10" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAABAAAAAIAAAAAAAAAAAAAAAAAAAICAAAAAAAAIIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Table&lt;T&gt;">
+    <Position X="16.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAQAAAAAAAIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataHandler">
+    <Position X="16.25" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAQBAACKAAAACAoAAAAABAAAAAAEAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Menu">
+    <Position X="6.25" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgABAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultMenu">
+    <Position X="5.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AdminMenu">
+    <Position X="9" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAARCAAAAABAAgAAAEAACAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserMenu">
+    <Position X="11.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BuyerMenu">
+    <Position X="0.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQCAAAAAgAAgAAAAAAiAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SellerMenu">
+    <Position X="3" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAQAAAAAABAAgAAAAAAiAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InfoMenu">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAQAgAAQAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQL_Interpreter">
+    <Position X="19.75" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAACDAAAAAAAAACBAAAAAAAQBQAAAAAEAEAAk=</HashCode>
+      <FileName>SQL_Interpreter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StringOperator">
+    <Position X="14.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAQCAAAA=</HashCode>
+      <FileName>StringOperator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserHandler">
+    <Position X="19.25" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAIAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>User.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Operator" Collapsed="true">
+    <Position X="14.75" Y="12" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAEAAAAIAAAAAAA=</HashCode>
+      <FileName>Calculator.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Precedence">
+    <Position X="18.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAQAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Calculator.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UserTypes">
+    <Position X="14.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CommodityStates">
+    <Position X="14.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DATA_TYPES">
+    <Position X="16.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABAAA=</HashCode>
+      <FileName>SQL_Interpreter.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="10" />
+</ClassDiagram>

@@ -6,6 +6,6 @@ class StringOperator
 public:
 	static void comma2space(wstring &src);
 	static bool checkvalidity(wstring& src);
-	static string float2str(float n, int digits);
+	static wstring float2str(float n);
 };
 

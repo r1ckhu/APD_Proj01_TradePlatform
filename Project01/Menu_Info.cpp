@@ -1,10 +1,15 @@
 #include "Menu.h"
 #include "User.h"
+#include "Calculator.h"
 #include <sstream>
+#include <fstream>
+#include <map>
+#include <vector>
 using namespace std;
 extern UserHandler userhandler;
 extern SQL_Interpreter sql_interpreter;
 extern DataHandler datahandler;
+extern Calculator calculator;
 void InfoMenu::printMenu()
 {
 	putnch('\n', 2);
@@ -33,7 +38,7 @@ void InfoMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 3) {
-			//recharge(user);
+			recharge(user);
 			continue;
 		}
 		else if (input == 4) {
@@ -53,7 +58,7 @@ void InfoMenu::show_info(UserData* user)
 	wprintf(L"Your address is: ");
 	wcout << user->address << endl;
 	wprintf(L"Your balance is: ");
-	wcout << user->get_balance() << endl;
+	wcout << cal_balance(user) << endl;
 	putnch('*', 30);
 }
 
@@ -122,7 +127,7 @@ void InfoMenu::modify_info(UserData* user)
 		wcin >> sign;
 		if (sign == 'y') {
 			wstringstream wss;
-			wss << L"UPDATE user SET address = " << address<< " WHERE userID = "
+			wss << L"UPDATE user SET address = " << address << " WHERE userID = "
 				<< user->get_id();
 			command = wss.str();
 			sql_interpreter.interpret(command);
@@ -133,4 +138,80 @@ void InfoMenu::modify_info(UserData* user)
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
+}
+
+void InfoMenu::recharge(UserData* user)
+{
+	float money = 0.0;
+	wprintf(L"Please enter the amount you want to recharge: ");
+	wcin >> money;
+	user->set_balance(user->get_balance() + money);
+	wofstream out_balance(fpath_balance, ios::app);
+	out_balance << user->get_id() << ' ' << money << endl;
+	wprintf(L"Successful! Now you have: %.f", user->get_balance());
+	wstringstream wss;
+	wss << L"UPDATE user SET balance = " << user->get_balance() << L" WHERE userID = " << user->get_id();
+	wstring command;
+	command = wss.str();
+	sql_interpreter.interpret(command);
+	out_balance.close();
+}
+
+float InfoMenu::cal_balance(UserData* user)
+{
+	map<int, vector<float>> map_exp;
+	Table<OrderData>* tod = datahandler.get_order_table();
+	for (list<OrderData>::iterator it = tod->_list.begin(); it != tod->_list.end(); it++) {
+		if ((*it).seller_id == user->get_id() || (*it).buyer_id == user->get_id()) {
+			float val = ((*it).seller_id == user->get_id()) ? (*it).price : -(*it).price;
+			int mul = (*it).quantity;
+			map<int, vector<float>>::iterator itt = map_exp.find(mul);
+			if (itt != map_exp.end()) {
+				itt->second.push_back(val);
+			}
+			else {
+				vector<float> v;
+				v.push_back(val);
+				map_exp.insert(pair<int, vector<float>>(mul, v));
+			}
+		}
+
+	}
+	wifstream in_balance(fpath_balance, ios::in);
+	wstring id;
+	float val = 0.0;
+	while (in_balance >> id >> val) {
+		if (id == user->get_id()) {
+			map<int, vector<float>>::iterator itt = map_exp.find(1);
+			if (itt != map_exp.end()) {
+				itt->second.push_back(val);
+			}
+			else {
+				vector<float> v;
+				v.push_back(val);
+				map_exp.insert(pair<int, vector<float>>(1, v));
+			}
+		}
+	}
+	wstring exp;
+	wstringstream wss;
+	map<int, vector<float>>::iterator itt;
+	for (itt = map_exp.begin(); itt != map_exp.end(); itt++) {
+		wss << (*itt).first << '*' << '(';
+		for (vector<float>::iterator vit = (*itt).second.begin(); vit != (*itt).second.end(); vit++) {
+			if (vit == (*itt).second.begin())
+				wss << (*vit);
+			else {
+				if (*vit >= 0)
+					wss << '+' << (*vit);
+				else
+					wss << (*vit);
+			}
+		}
+		wss << ')' << '+';
+	}
+	wss << '0';
+	exp = wss.str();
+	float ans = calculator.calexp(exp);
+	return ans;
 }

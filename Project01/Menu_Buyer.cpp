@@ -64,7 +64,6 @@ void BuyerMenu::show_commodity(UserData* user)
 
 void BuyerMenu::buy_commodity(UserData* user)
 {
-	// TODO: datahandler need get commodity funciton
 	wstring id;
 	int quantity = 0;
 	wprintf(L"Please enter the commodity's id:");
@@ -86,6 +85,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 		else if (quantity > cd->get_quantity())
 		{
 			wprintf(L"-----Insufficient quantity! Operation Terminated.-----");
+			return;
 		}
 		wprintf(L"The commodity you choose:\n");
 		putnch('*', 30);
@@ -122,7 +122,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 			command = wss.str();
 			sql_interpreter.interpret(command);
 			sql_interpreter.log(command);
-			if (cd->get_quantity() - quantity == 0)
+			if (cd->get_quantity() == 0)
 			{
 				command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
 				command += id;

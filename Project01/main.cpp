@@ -17,7 +17,7 @@ int main()
 	wcout.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 	wcin.imbue(locale("zh_CN.UTF-8"));
 	setlocale(LC_ALL, "zh_CN.UTF-8");
-	
+
 	// orderID, commodityID, unitPrice, number, date, sellerID, buyerID
 	// commodityID, commodityName, price, number, description, sellerID, addedDate, state
 	// userID, username, password, phoneNumber, address, balance, userState
@@ -87,31 +87,31 @@ int main()
 	}
 	cout << endl << endl;
 
-	string exp = "3 + 4 * 2 / ( 1 - 5 )";
+	wstring exp = L"3 + 4 * 2 / ( 1 - 5 )";
 	float ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "-2";
+	exp = L"-2";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "(-2)*4";
+	exp = L"(-2)*4";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "2*-4";
+	exp = L"2.0+-4.0";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "4*(-2)";
+	exp = L"4.0*(-2.0)";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "((4 * 3 + 2) / (6.4 - 2.4) - 10) * (6.4 - 7.2) + (-2) * 4";
+	exp = L"((4 * 3 + 2) / (6.4 - 2.4) - 10) * (6.4 - 7.2) + (-2) * 4";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 
-	exp = "(2 + 4 * 3.5) * 6";
+	exp = L"(2 + 4 * 3.5) * 6";
 	ans = calculator.calexp(exp);
 	cout << ans << endl << endl;
 	wstring id = L"M001";
@@ -120,6 +120,6 @@ int main()
 	UserMenu usermenu;
 	//usermenu.inputloop(ud);
 	defaultmenu.inputloop(ud);
-	
+
 	return 0;
 }

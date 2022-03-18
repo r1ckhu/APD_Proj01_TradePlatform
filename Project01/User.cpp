@@ -1,6 +1,7 @@
 #pragma once
 #include "Data.h"
 #include "User.h"
+#include <sstream>
 using namespace std;
 extern DataHandler datahandler;
 
@@ -43,4 +44,27 @@ UserData* UserHandler::userlogin()
 	}
 	wprintf(L"---username or password wrong£¬return to the main menu now---\n\n");
 	return nullptr;
+}
+
+void UserHandler::userRegister()
+{
+	wstring id, name, phoneNumber, password, address;
+	wprintf(L"Please enter your userName: ");
+	wcin >> name;
+	wprintf(L"Please enter your password: ");
+	wcin >> password;
+	wprintf(L"Please enter your phoneNumber: ");
+	wcin >> phoneNumber;
+	wprintf(L"Please enter your address: ");
+	wcin >> address;
+	id = datahandler.generate_user_id();
+	wstringstream wss;
+	wss << id << ' ' << name << ' ' << password << ' ' << phoneNumber << ' ' << address\
+		<< ' ' << 0.0 <<  ' ' << "active";
+	UserData ud(wss);
+	datahandler.get_user_table()->_list.push_back(ud);
+	wfstream out_user(fpath_user,ios::app);
+	out_user<< id << ',' << name << ',' << password << ',' << phoneNumber << ',' << address\
+		<< ',' << 0.0 << ',' << "active";
+	out_user.close();
 }

@@ -142,6 +142,7 @@ public:
 	friend class SQL_Interpreter;
 	friend class UserHandler;
 	friend class DataHandler;
+	friend class InfoMenu;
 	//write_to_file(); // TODO
 };
 
