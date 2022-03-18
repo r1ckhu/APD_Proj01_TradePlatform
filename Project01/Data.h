@@ -50,7 +50,7 @@ public:
 	UserData();
 	UserData(wstringstream& values);
 	wstring address;
-	int contact;
+	wstring contact;
 	const wstring& get_password();
 	const float& get_balance();
 	const UserTypes& get_usertype();

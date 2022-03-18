@@ -59,7 +59,7 @@ UserData::UserData()
 {
 	id = L"";
 	name = L"";
-	contact = 0;
+	contact = L"";
 	address = L"";
 	balance = 0.0;
 	password = L"";
