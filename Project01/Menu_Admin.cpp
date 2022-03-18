@@ -15,14 +15,9 @@ void AdminMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
-		if (!cin) { //illegal input handling
-			cin.clear();
-			string cache;
-			cin >> cache;
-		}
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		cin >> input;
+		InputHandler::inputCommand(input, 1, 7);
 		if (input == 1) {
 			show_commodity();
 			continue;
@@ -65,7 +60,10 @@ void AdminMenu::search_commodity()
 {
 	wstring name;
 	wprintf(L"Please enter a commodity's name:");
-	wcin >> name;
+	if (!InputHandler::inputString(name, 20, false, true)) { //name
+		InputHandler::throwError();
+		return;
+	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
@@ -78,7 +76,10 @@ void AdminMenu::remove_commodity()
 {
 	wstring id;
 	wprintf(L"Please enter a commodity's id:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+		InputHandler::throwError();
+		return;
+	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityID CONTAINS ");
 	command += id;
 	wprintf(L"This is the commodity you select:\n");
@@ -89,7 +90,7 @@ void AdminMenu::remove_commodity()
 		sql_interpreter.log(command);
 		wprintf(L"Please Confirm your choice (y/n):");
 		wchar_t sign;
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
 			command += id;
@@ -123,7 +124,10 @@ void AdminMenu::ban_user()
 {
 	wstring id;
 	wprintf(L"Please enter a user's id:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+		InputHandler::throwError();
+		return;
+	}
 	wstring command(L"SELECT * FROM user WHERE userID CONTAINS ");
 	command += id;
 	wprintf(L"This is the user you select:\n");
@@ -134,7 +138,7 @@ void AdminMenu::ban_user()
 		sql_interpreter.interpret(command);
 		wprintf(L"Please Confirm your choice (y/n):");
 		wchar_t sign;
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			command = L"UPDATE user SET userState = inactive WHERE userID = ";
 			command += id;

@@ -16,3 +16,21 @@ wstring StringOperator::float2str(float n)
 	wss >> ws;
 	return ws;
 }
+
+int StringOperator::str2int(wstring& src)
+{
+	wstringstream wss;
+	wss << src;
+	int dst = 0;
+	wss >> dst;
+	return dst;
+}
+
+float StringOperator::str2float(wstring& src)
+{
+	float dst = 0.0f;
+	wstringstream wss;
+	wss << src;
+	wss >> dst;
+	return dst;
+}

@@ -21,14 +21,9 @@ void InfoMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
-		if (!cin) { //illegal input handling
-			cin.clear();
-			string cache;
-			cin >> cache;
-		}
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		cin >> input;
+		InputHandler::inputCommand(input, 1, 4);
 		if (input == 1) {
 			show_info(user);
 			continue;
@@ -66,17 +61,24 @@ void InfoMenu::modify_info(UserData* user)
 {
 	wstring command;
 	wstring name, contact, address;
+	int isign;
 	wchar_t sign;
 	wprintf(L"Please the attribute to be modified ( 1 for Name / 2 for Contact / 3 for Address):");
-	wcin >> sign;
-	if (sign == '1') {
+	if (!InputHandler::inputCommand(isign, 1, 3)) {
+		InputHandler::throwError();
+		return;
+	}
+	if (isign == 1) {
 		wprintf(L"Please enter new name:");
-		wcin >> name;
+		if (!InputHandler::inputString(name, 10, false, true)) { //name
+			InputHandler::throwError();
+			return;
+		}
 		putnch('*', 25);
 		wcout << L"Your name wiil be: " << name << endl;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		UserData* possible_user = datahandler.get_user_table()->find_byName(name);
 		if (sign == 'y' && possible_user == nullptr) {
 			wstringstream wss;
@@ -94,10 +96,10 @@ void InfoMenu::modify_info(UserData* user)
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
-	else if (sign == '2')
+	else if (isign == 2)
 	{
 		wprintf(L"Please enter new phone number:");
-		wcin >> contact;
+		// Stop here
 		putnch('*', 25);
 		wcout << L"Your phone number wiil be: " << contact << endl;
 		putnch('*', 25);
@@ -116,7 +118,7 @@ void InfoMenu::modify_info(UserData* user)
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
-	else if (sign == '3')
+	else if (isign == 3)
 	{
 		wprintf(L"Please enter new address:");
 		wcin >> address;

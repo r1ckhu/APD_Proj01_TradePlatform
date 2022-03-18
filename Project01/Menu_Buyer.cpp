@@ -19,14 +19,9 @@ void BuyerMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
-		if (!cin) { //illegal input handling
-			cin.clear();
-			string cache;
-			cin >> cache;
-		}
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		cin >> input;
+		InputHandler::inputCommand(input, 1, 6);
 		if (input == 1) {
 			show_commodity(user);
 			continue;
@@ -67,9 +62,15 @@ void BuyerMenu::buy_commodity(UserData* user)
 	wstring id;
 	int quantity = 0;
 	wprintf(L"Please enter the commodity's id:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+		InputHandler::throwError();
+		return;
+	}
 	wprintf(L"Please enter the quantity:");
-	wcin >> quantity;
+	if (!InputHandler::inputInt(quantity)) {
+		InputHandler::throwError();
+		return;
+	}
 	Table<CommodityData>* table = datahandler.get_commodity_table();
 	CommodityData* cd = table->find_byID(id);
 	if (cd != nullptr)
@@ -102,7 +103,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 		putnch('*', 30);
 		wprintf(L"Please confirm your choice (y/n): ");
 		wchar_t sign;
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y')
 		{
 			user->set_balance(user->get_balance() - cd->get_price() * quantity);
@@ -141,7 +142,10 @@ void BuyerMenu::search_commodity(UserData* user)
 {
 	wstring name;
 	wprintf(L"Please enter a commodity's name:");
-	wcin >> name;
+	if (!InputHandler::inputString(name, 20, false, true)) { //name
+		InputHandler::throwError();
+		return;
+	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
@@ -152,7 +156,6 @@ void BuyerMenu::search_commodity(UserData* user)
 
 void BuyerMenu::show_history(UserData* user)
 {
-	// Dismatched command 
 	wstring command(L"SELECT * FROM order WHERE buyerID CONTAINS" + user->get_id());
 	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
@@ -165,7 +168,10 @@ void BuyerMenu::show_detail(UserData* user)
 {
 	wstring id;
 	wprintf(L"Please enter the commodityID:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+		InputHandler::throwError();
+		return;
+	}
 	CommodityData* cd = datahandler.get_commodity_table()->find_byID(id);
 	putnch('*', 30);
 	wcout << L"The commodity ID is: " << cd->get_id() << endl;
