@@ -49,7 +49,8 @@ void InfoMenu::show_info(UserData* user)
 	wcout << user->get_id() << endl;
 	wprintf(L"Your name is: ");
 	wcout << user->name << endl;
-	wprintf(L"Your contact is: %d\n", user->contact);
+	wprintf(L"Your contact is: ");
+	wcout << user->contact << endl;
 	wprintf(L"Your address is: ");
 	wcout << user->address << endl;
 	wprintf(L"Your balance is: ");

@@ -254,12 +254,7 @@ void SQL_Interpreter::update_row(wstringstream& values, UserData& dst)
 			dst.balance = b;
 		}
 		else if (col == L"phoneNumber")
-		{
-			int c = 0;
-			ws_val << val;
-			ws_val >> c;
-			dst.contact = c;
-		}
+			dst.contact = val;
 		else if (col == L"address")
 			dst.address = val;
 		else if (col == L"password")
