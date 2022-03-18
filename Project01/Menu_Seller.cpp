@@ -18,14 +18,9 @@ void SellerMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
-		if (!cin) { //illegal input handling
-			cin.clear();
-			string cache;
-			cin >> cache;
-		}
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		cin >> input;
+		InputHandler::inputCommand(input, 1, 6);
 		if (input == 1) {
 			put_commodity(user);
 			continue;
@@ -59,21 +54,34 @@ void SellerMenu::put_commodity(UserData* user)
 	float price;
 	int quantity;
 	wprintf(L"Please enter commodity name:");
-	wcin >> name;
+	if (!InputHandler::inputString(name, 20, false, true)) { //name
+		InputHandler::throwError();
+		return;
+	}
 	wprintf(L"Please enter unit price:");
-	wcin >> price;
+	if (!InputHandler::inputFloat(price)) {
+		InputHandler::throwError();
+		return;
+	}
 	wprintf(L"Please enter quantity:");
-	wcin >> quantity;
+	if (!InputHandler::inputInt(quantity)) {
+		InputHandler::throwError();
+		return;
+	}
 	wprintf(L"Please enter description:");
-	wcin >> description;
+	if (!InputHandler::inputString(description, 200, false, true)) {
+		InputHandler::throwError();
+		return;
+	}
 	putnch('*', 25);
 	wcout << L"Commodity name: " << name << endl;
 	wcout << L"Commodity price: " << price << endl;;
 	wcout << L"Commodity quantity: " << quantity << endl;
 	wcout << L"Commodity description: " << description << endl;
+	putnch('*', 25);
 	wprintf(L"\nPlease confirm your choice (y/n):");
 	wchar_t sign;
-	wcin >> sign;
+	InputHandler::inputConfirm(sign);
 	if (sign == 'y') {
 		wstringstream wss;
 		wss << L"INSERT INTO commodity VALUES (" << datahandler.generate_commodity_id() \
@@ -92,7 +100,6 @@ void SellerMenu::put_commodity(UserData* user)
 
 void SellerMenu::show_commodity(UserData* user)
 {
-	// TODO: Dismatched command
 	wstring command(L"SELECT * FROM commodity WHERE sellerID CONTAINS ");
 	command += user->get_id();
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
@@ -104,24 +111,31 @@ void SellerMenu::show_commodity(UserData* user)
 
 void SellerMenu::modify_commodity(UserData* user)
 {
+	// TODO: can only modify my's commodity
 	wstring command;
 	wstring id, description;
 	float price = 0.0;
+	int isign;
 	wchar_t sign;
 	wprintf(L"Please enter the commodity's id:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, true)) {
+		InputHandler::throwError();
+		return;
+	}
 	wprintf(L"Please the attribute to be modified ( 1 for Price / 2 for Description):");
-	wcin >> sign;
-	if (sign == '1') {
+	InputHandler::inputCommand(isign, 1, 2);
+	if (isign == 1) {
 		wprintf(L"Please enter new price:");
-		wcin >> price;
-		// Dismatched output
+		if (InputHandler::inputFloat(price)) {
+			InputHandler::throwError();
+			return;
+		}
 		putnch('*', 25);
 		wcout << L"The commodity to be modified 's ID: " << id << endl;
 		wcout << L"The new price: " << price << endl;;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			wstringstream wss;
 			wss << L"UPDATE commodity SET price = " << price << " WHERE commodityID = "
@@ -135,15 +149,18 @@ void SellerMenu::modify_commodity(UserData* user)
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
-	else if (sign == '2') {
+	else if (isign == 2) {
 		wprintf(L"Please enter description:");
-		wcin >> description;
+		if (!InputHandler::inputString(description, 200, false, true)) {
+			InputHandler::throwError();
+			return;
+		}
 		putnch('*', 25);
 		wcout << L"The commodity to be modified 's ID: " << id << endl;
 		wcout << L"The new description: " << description << endl;;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			wstringstream wss;
 			wss << L"UPDATE commodity SET description = " << description << " WHERE commodityID = "
@@ -167,7 +184,10 @@ void SellerMenu::remove_commodity(UserData* user)
 	// TODO: need to confirm is seller's product
 	wstring id;
 	wprintf(L"Please enter a commodity's id:");
-	wcin >> id;
+	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
+		InputHandler::throwError();
+		return;
+	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityID CONTAINS ");
 	command += id;
 	wprintf(L"This is the commodity you select:\n");
@@ -177,7 +197,7 @@ void SellerMenu::remove_commodity(UserData* user)
 	{
 		wprintf(L"Please Confirm your choice (y/n):");
 		wchar_t sign;
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
 			command += id;
@@ -192,10 +212,9 @@ void SellerMenu::remove_commodity(UserData* user)
 	delete _list;
 }
 
-void SellerMenu::show_history(UserData *user)
+void SellerMenu::show_history(UserData* user)
 {
-	// Dismatched command 
-	wstring command(L"SELECT * FROM order WHERE sellerID CONTAINS" +user->get_id());
+	wstring command(L"SELECT * FROM order WHERE sellerID CONTAINS" + user->get_id());
 	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
 	command = L"SELECT * FROM order";

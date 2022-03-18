@@ -333,13 +333,8 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring col, wstring
 		return true;
 	else if (col == L"username" && val.find(tar.name) != wstring::npos)
 		return true;
-	else if (col == L"phoneNumber")
-	{
-		int c = 0;
-		ws_val >> c;
-		if (c == tar.contact)
-			return true;
-	}
+	else if (col == L"phoneNumber" && tar.contact == val)
+		return true;
 	else if (col == L"password" && tar.password == val)
 		return true;
 	else if (col == L"address" && tar.address == val)

@@ -15,14 +15,9 @@ void UserMenu::inputloop(UserData* user)
 {
 	int input = 0;
 	while (true) {
-		if (!cin) { //illegal input handling
-			cin.clear();
-			string cache;
-			cin >> cache;
-		}
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		cin >> input;
+		InputHandler::inputCommand(input, 1, 4);
 		if (input == 1) {
 			BuyerMenu buyermenu;
 			buyermenu.inputloop(user);

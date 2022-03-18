@@ -49,14 +49,16 @@ bool InputHandler::inputNumber(wstring& src, int length)
 {
 	wcin >> src;
 	for (wchar_t ch : src) {
-		if (ch < '1' || ch >'9') {
+		if (ch < '0' || ch >'9') {
 			wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			return false;
 		}
 	}
 	if (src.size() > length)
+	{
 		wcout << "----WARNING: INPUT EXCEED MAXIMUM LENGTH! EXCEEDED PART WILL BE CUT!----" << endl;
-	src.resize(length);
+		src.resize(length);
+	}
 	wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	return true;
 }
@@ -65,7 +67,7 @@ bool InputHandler::inputString(wstring& src, int length, bool allowNumber, bool 
 {
 	wcin >> src;
 	for (wchar_t ch : src) {
-		if (allowNumber && '1' <= ch && ch <= '9')
+		if (allowNumber && '0' <= ch && ch <= '9')
 			continue;
 		if (allowCaptial && 'A' <= ch && ch <= 'Z')
 			continue;
@@ -75,8 +77,10 @@ bool InputHandler::inputString(wstring& src, int length, bool allowNumber, bool 
 		}
 	}
 	if (src.size() > length)
+	{
 		wcout << "----WARNING: INPUT EXCEED MAXIMUM LENGTH! EXCEEDED PART WILL BE CUT!----" << endl;
-	src.resize(length);
+		src.resize(length);
+	}
 	wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	return true;
 }

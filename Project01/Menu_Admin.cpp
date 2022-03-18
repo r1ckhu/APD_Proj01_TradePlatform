@@ -76,7 +76,7 @@ void AdminMenu::remove_commodity()
 {
 	wstring id;
 	wprintf(L"Please enter a commodity's id:");
-	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
 		return;
 	}
@@ -124,7 +124,7 @@ void AdminMenu::ban_user()
 {
 	wstring id;
 	wprintf(L"Please enter a user's id:");
-	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
 		return;
 	}

@@ -59,10 +59,11 @@ void BuyerMenu::show_commodity(UserData* user)
 
 void BuyerMenu::buy_commodity(UserData* user)
 {
+	// TODO: offshelf commodity & no order
 	wstring id;
 	int quantity = 0;
 	wprintf(L"Please enter the commodity's id:");
-	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
 		return;
 	}
@@ -168,7 +169,7 @@ void BuyerMenu::show_detail(UserData* user)
 {
 	wstring id;
 	wprintf(L"Please enter the commodityID:");
-	if (!InputHandler::inputString(id, 4, true, false)) {/*id*/
+	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
 		return;
 	}

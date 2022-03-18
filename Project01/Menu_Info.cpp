@@ -100,12 +100,12 @@ void InfoMenu::modify_info(UserData* user)
 	else if (isign == 2)
 	{
 		wprintf(L"Please enter new phone number:");
-		// Stop here
+		InputHandler::inputNumber(contact,20);
 		putnch('*', 25);
 		wcout << L"Your phone number wiil be: " << contact << endl;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			wstringstream wss;
 			wss << L"UPDATE user SET phoneNumber = " << contact << " WHERE userID = "
@@ -122,12 +122,12 @@ void InfoMenu::modify_info(UserData* user)
 	else if (isign == 3)
 	{
 		wprintf(L"Please enter new address:");
-		wcin >> address;
+		InputHandler::inputString(address, 40, false, true);
 		putnch('*', 25);
 		wcout << L"Your address wiil be: " << address << endl;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
-		wcin >> sign;
+		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
 			wstringstream wss;
 			wss << L"UPDATE user SET address = " << address << " WHERE userID = "
@@ -147,7 +147,10 @@ void InfoMenu::recharge(UserData* user)
 {
 	float money = 0.0;
 	wprintf(L"Please enter the amount you want to recharge: ");
-	wcin >> money;
+	if (!InputHandler::inputFloat(money)) {
+		InputHandler::throwError();
+		return;
+	}
 	user->set_balance(user->get_balance() + money);
 	wofstream out_balance(fpath_balance, ios::app);
 	out_balance << user->get_id() << ' ' << money << endl;
