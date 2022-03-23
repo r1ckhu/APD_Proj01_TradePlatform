@@ -2,6 +2,9 @@
 #include "Data.h"
 #include "InputHandler.h"
 #include "Calculator.h"
+#include <iomanip>
+#include <sstream>
+
 class Menu
 {
 public:

@@ -35,7 +35,7 @@ UserData* UserHandler::userlogin()
 	Table<UserData>* usertable = datahandler.get_user_table();
 	UserData* ud = usertable->find_byName(name);
 	if (ud->is_banned()) {
-		wcout << "----You have been banned! Contact Administrator for help.----" << endl;
+		wcout << "----You have been banned! Please contact Administrator for help.----" << endl;
 		return nullptr;
 	}
 	for (list<UserData>::iterator it = usertable->_list.begin(); it != usertable->_list.end(); it++)

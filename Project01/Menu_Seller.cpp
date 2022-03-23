@@ -111,7 +111,6 @@ void SellerMenu::show_commodity(UserData* user)
 
 void SellerMenu::modify_commodity(UserData* user)
 {
-	// TODO: can only modify my's commodity
 	wstring command;
 	wstring id, description;
 	float price = 0.0;
@@ -120,6 +119,15 @@ void SellerMenu::modify_commodity(UserData* user)
 	wprintf(L"Please enter the commodity's id:");
 	if (!InputHandler::inputString(id, 4, true, true)) {
 		InputHandler::throwError();
+		return;
+	}
+	CommodityData* cd = datahandler.get_commodity_table()->find_byID(id);
+	if (cd == nullptr) {
+		wprintf(L"No Commodity Found!\n");
+		return;
+	}
+	if (cd->get_seller_id() != user->get_id()) {
+		wprintf(L"----You can not modify other's commodity!----\n");
 		return;
 	}
 	wprintf(L"Please the attribute to be modified ( 1 for Price / 2 for Description):");
@@ -181,11 +189,19 @@ void SellerMenu::modify_commodity(UserData* user)
 
 void SellerMenu::remove_commodity(UserData* user)
 {
-	// TODO: need to confirm is seller's product
 	wstring id;
 	wprintf(L"Please enter a commodity's id:");
 	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
+		return;
+	}
+	CommodityData* cd = datahandler.get_commodity_table()->find_byID(id);
+	if (cd == nullptr) {
+		wprintf(L"No Commodity Found!\n");
+		return;
+	}
+	if (cd->get_seller_id() != user->get_id()) {
+		wprintf(L"----You can not remove other's commodity!----\n");
 		return;
 	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityID CONTAINS ");

@@ -2,7 +2,7 @@
 #include "Menu.h"
 #include "User.h"
 #include "Data.h"
-#include <sstream>
+
 using namespace std;
 extern UserHandler userhandler;
 extern SQL_Interpreter sql_interpreter;
@@ -50,17 +50,34 @@ void BuyerMenu::inputloop(UserData* user)
 
 void BuyerMenu::show_commodity(UserData* user)
 {
-	// TODO: output not right
 	wstring command(L"SELECT * FROM commodity");
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	sql_interpreter.interpret(command);
 	sql_interpreter.log(command);
-	formatting_output(_list, true);
+	if (_list->size() == 0) {
+		wprintf(L"No Commodity Found!\n");
+		return;
+	}
+	putnch('*', 100);
+	int WIDTH = 15;
+	wcout << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"commodityName" << setw(WIDTH) << L"price" << setw(WIDTH) << L"number" <<
+		setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
+	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
+	{
+		if ((*it).get_commodity_state() == ON_SELL) {
+			wcout << setw(WIDTH) << (*it).get_id() << setw(WIDTH) << (*it).name
+				<< setw(WIDTH) << (*it).get_price() << setw(WIDTH) << (*it).get_quantity()
+				<< setw(WIDTH) << (*it).get_seller_id()
+				<< setw(WIDTH) << (*it).time_on_shelf << setw(WIDTH)
+				<< setw(WIDTH) << ((*it).get_commodity_state() == ON_SELL ? L"onSale" : L"offShelf") << endl;
+		}
+
+	}
+	putnch('*', 100);
 }
 
 void BuyerMenu::buy_commodity(UserData* user)
 {
-	// TODO: offshelf commodity & no order
 	wstring id;
 	int quantity = 0;
 	wprintf(L"Please enter the commodity's id:");
@@ -85,9 +102,13 @@ void BuyerMenu::buy_commodity(UserData* user)
 			wprintf(L"-----No commodity found! Operation Terminated.-----");
 			return;
 		}
-		else if (quantity > cd->get_quantity())
+		else if (quantity > cd->get_quantity() || cd->get_quantity() == 0)
 		{
 			wprintf(L"-----Insufficient quantity! Operation Terminated.-----");
+			return;
+		}
+		else if (quantity <= 0) {
+			wprintf(L"----Operation Terminated.----");
 			return;
 		}
 		wprintf(L"The commodity you choose:\n");
@@ -108,16 +129,24 @@ void BuyerMenu::buy_commodity(UserData* user)
 		InputHandler::inputConfirm(sign);
 		if (sign == 'y')
 		{
-			user->set_balance(user->get_balance() - cd->get_price() * quantity);
 			wstringstream wss;
+			wstring command;
+			user->set_balance(user->get_balance() - cd->get_price() * quantity);
+			wss << L"UPDATE user SET balance = " << user->get_balance()\
+				<< L" WHERE userID = " << user->get_id();
+			command = wss.str();
+			sql_interpreter.interpret(command);
+
+			wss.str(L" ");
+			wss.seekg(0);
 			wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
 				<< id << ',' << cd->get_price() << ','\
-				<< cd->get_quantity() - quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
+				<< quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
 				<< ',' << user->get_id() << ')';
-			wstring command;
 			command = wss.str();
 			sql_interpreter.interpret(command);
 			sql_interpreter.log(command);
+
 			wss.str(L" ");
 			wss.seekg(0);
 			wss << L"UPDATE commodity SET number = " << cd->get_quantity() - quantity \
@@ -125,6 +154,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 			command = wss.str();
 			sql_interpreter.interpret(command);
 			sql_interpreter.log(command);
+
 			if (cd->get_quantity() == 0)
 			{
 				command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";

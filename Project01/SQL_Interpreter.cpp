@@ -18,7 +18,6 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 	wstring word;
 	wss >> word; // word is now command
 	if (word == L"INSERT") {
-		// TODO: need retesting
 		wss >> word >> word; // word is now name
 		wstring name = word;
 		wss >> word >> word; // Remove ( and , in wss
@@ -28,7 +27,6 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 		wstringstream values;
 		values << word;
 		if (name == L"commodity") {
-			// TODO: can be changed to reference
 			Table<CommodityData>* table = datahandler.get_commodity_table();
 			CommodityData cd = insert<CommodityData>(values, table);
 			appendfile(cd);

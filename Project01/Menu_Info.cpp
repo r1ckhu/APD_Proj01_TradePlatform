@@ -90,7 +90,7 @@ void InfoMenu::modify_info(UserData* user)
 			sql_interpreter.log(command);
 			wprintf(L"Operation Successful!\n\n");
 		}
-		else if (possible_user != nullptr) {
+		else if (sign == 'y' && possible_user != nullptr) {
 			wprintf(L"This name has been used by others! Choose a new one.\n\n");
 		}
 		else {
@@ -100,7 +100,7 @@ void InfoMenu::modify_info(UserData* user)
 	else if (isign == 2)
 	{
 		wprintf(L"Please enter new phone number:");
-		InputHandler::inputNumber(contact,20);
+		InputHandler::inputNumber(contact, 20);
 		putnch('*', 25);
 		wcout << L"Your phone number wiil be: " << contact << endl;
 		putnch('*', 25);

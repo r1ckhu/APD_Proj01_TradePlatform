@@ -154,7 +154,7 @@ private:
 	Table<OrderData> orderTable;
 
 public:
-	DataHandler(); //TODO:Set fstream static
+	DataHandler(); //TODO: Set fstream static
 	Table<CommodityData>* get_commodity_table();
 	Table<UserData>* get_user_table();
 	Table<OrderData>* get_order_table();

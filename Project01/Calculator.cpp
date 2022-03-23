@@ -5,7 +5,6 @@
 #include <stack>
 #include <iostream>
 using namespace std;
-// TODO: Error handling
 const wstring err_op = L"----ERROR: Illigal Operator!----";
 const wstring err_divZero = L"----ERROR: Divide by Zero!----";
 const wstring err_wroNumFor = L"----ERROR: Unaccepted Number Format!----";
@@ -78,14 +77,14 @@ bool Calculator::to_rpn(wstring& exp, wstring& dst)
 float Calculator::calexp(wstring& exp)
 {
 	trim(exp);
-	wcout << exp << endl;
+	//wcout << exp << endl;
 	bool valid = is_valid_expression(exp);
 	wstring rpn;
 	bool matched_parentheses = to_rpn(exp, rpn);
 	if (!(matched_parentheses && valid)) {
 		return NAN;
 	}
-	wcout << rpn << endl;
+	//wcout << rpn << endl;
 	stack<float> num_stack;
 	wstringstream ss(rpn);
 	wchar_t buffer = ' ';
