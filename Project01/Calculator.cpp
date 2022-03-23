@@ -6,7 +6,14 @@
 #include <iostream>
 using namespace std;
 // TODO: Error handling
-wstring& Calculator::to_rpn(wstring& exp, wstring& dst)
+const wstring err_op = L"----ERROR: Illigal Operator!----";
+const wstring err_divZero = L"----ERROR: Divide by Zero!----";
+const wstring err_wroNumFor = L"----ERROR: Unaccepted Number Format!----";
+const wstring err_mismatPar = L"----ERROR: Mismatched Parentheses!----";
+const wstring err_unknown = L"----ERROR: Unknown Error!----";
+const wstring err_unChar = L"----ERROR: Unaccepted Charactor!----";
+const float DELTA = 0.00001;
+bool Calculator::to_rpn(wstring& exp, wstring& dst)
 {
 	wstringstream input, output;
 	stack<wchar_t> op_stack;
@@ -38,8 +45,8 @@ wstring& Calculator::to_rpn(wstring& exp, wstring& dst)
 			op_stack.push(buffer);
 		else if (buffer == ')') {
 			if (op_stack.empty()) {
-				cout << "Mismatched parentheses!" << endl;
-				return dst;
+				wcout << err_mismatPar << endl;
+				return false;
 			}
 			while (op_stack.top() != '(')
 			{
@@ -47,8 +54,8 @@ wstring& Calculator::to_rpn(wstring& exp, wstring& dst)
 				op_stack.pop();
 				output << o << ' ';
 				if (op_stack.empty()) {
-					cout << "Mismatched parentheses!" << endl;
-					return dst;
+					wcout << err_mismatPar << endl;
+					return false;
 				}
 			}
 			if (op_stack.top() == '(')
@@ -58,21 +65,26 @@ wstring& Calculator::to_rpn(wstring& exp, wstring& dst)
 	while (!op_stack.empty()) {
 		char o = op_stack.top();
 		if (o == '(') {
-			cout << "Mismatched parentheses!" << endl;
-			return dst;
+			wcout << err_mismatPar << endl;
+			return false;
 		}
 		op_stack.pop();
 		output << o << ' ';
 	}
 	dst = output.str();
-	return dst;
+	return true;
 }
 
 float Calculator::calexp(wstring& exp)
 {
 	trim(exp);
+	wcout << exp << endl;
+	bool valid = is_valid_expression(exp);
 	wstring rpn;
-	rpn = to_rpn(exp, rpn);
+	bool matched_parentheses = to_rpn(exp, rpn);
+	if (!(matched_parentheses && valid)) {
+		return NAN;
+	}
 	wcout << rpn << endl;
 	stack<float> num_stack;
 	wstringstream ss(rpn);
@@ -91,8 +103,8 @@ float Calculator::calexp(wstring& exp)
 				num_stack.pop();
 			}
 			else {
-				cout << "Invaild expression!" << endl;
-				return -1;
+				wcout << err_unknown << endl;
+				return NAN;
 			}
 			operand = -operand;
 			num_stack.push(operand);
@@ -106,24 +118,33 @@ float Calculator::calexp(wstring& exp)
 					num_stack.pop();
 				}
 				else {
-					cout << "Invaild expression!" << endl;
-					return -1;
+					wcout << err_unknown << endl;
+					return NAN;
 				}
 			}
 			if (buffer == '*')
 				result = operands[0] * operands[1];
-			else if (buffer == '/')
+			else if (buffer == '/') {
+				if (operands[1] - 0.0 < DELTA) {
+					wcout << err_divZero << endl;
+					return NAN;
+				}
 				result = operands[0] / operands[1];
+			}
 			else if (buffer == '-')
 				result = operands[0] - operands[1];
 			else if (buffer == '+')
 				result = operands[0] + operands[1];
 			else {
-				cout << "Invaild expression!" << endl;
-				return -1;
+				wcout << err_unknown << endl;
+				return NAN;
 			}
 			num_stack.push(result);
 		}
+	}
+	if (num_stack.size() != 1) {
+		wcout << err_wroNumFor << endl;
+		return NAN;
 	}
 	return num_stack.top();
 }
@@ -131,11 +152,27 @@ float Calculator::calexp(wstring& exp)
 void Calculator::trim(wstring& exp)
 {
 	for (int i = 0; i < exp.size(); i++) {
-		if (exp[i] == ' ') {
-			exp.erase(i, 1);
-			i--;
+		if (is_operator(exp[i]) || exp[i] == '(' || exp[i] == ')') {
+			wchar_t left, right;
+			int opPos = i;
+			int lb = (opPos == 0) ? opPos : opPos - 1;
+			while (exp[lb] == ' ' && lb > 0)
+				lb--;
+			left = exp[lb];
+			if (lb != opPos)
+				exp.erase(exp.begin() + lb + 1, exp.begin() + i);
+			int leftCutLen = opPos - lb - 1;
+			opPos -= leftCutLen;
+			i -= leftCutLen;
+			int rb = (opPos == exp.size() - 1) ? opPos : opPos + 1;
+			while (exp[rb] == ' ' && rb < exp.size())
+				rb++;
+			right = exp[rb];
+			if (rb != opPos)
+				exp.erase(exp.begin() + 1 + opPos, exp.begin() + rb);
 		}
 	}
+
 	for (int i = 0; i < exp.size() - 1; i++) {
 		if (exp[i] == '(' && exp[i + 1] == '-')
 			exp[i + 1] = '~';
@@ -144,7 +181,6 @@ void Calculator::trim(wstring& exp)
 	}
 	if (exp[0] == '-')
 		exp[0] = '~';
-	wcout << exp << endl;
 	return;
 }
 
@@ -160,6 +196,51 @@ bool Calculator::is_left_associative(wchar_t op)
 		return true;
 	else
 		return false;
+}
+
+bool Calculator::is_valid_expression(wstring& exp)
+{
+	for (int i = 0; i < exp.size(); i++) {
+		if (is_operator(exp[i])) {
+			if ((i == 0 && exp[i] != '~') || (i == exp.size() - 1)) {
+				wcout << err_op << endl;
+				return false;
+			}
+			else if (i == 0 && exp[i] == '~')
+				continue;
+			if (is_operator(exp[i - 1]) || is_operator(exp[i + 1])) {
+				// TODO: This may be legal
+				wcout << err_op << endl;
+				return false;
+			}
+		}
+		else if (exp[i] == '.') {
+			if (i == 0 || i == exp.size() - 1) {
+				wcout << err_wroNumFor << endl;
+				return false;
+			}
+			else if (exp[i - 1] < '0' || exp[i - 1]>'9') {
+				wcout << err_wroNumFor << endl;
+				return false;
+			}
+			else if (exp[i + 1] < '0' || exp[i + 1]>'9') {
+				wcout << err_wroNumFor << endl;
+				return false;
+			}
+		}
+		else if ('0' <= exp[i] && exp[i] <= '9') {
+			if ((i != 0 && exp[i - 1] == ' ') || (i != exp.size() - 1 && exp[i + 1] == ' ')) {
+				wcout << err_wroNumFor << endl;
+				return false;
+			}
+		}
+		else if (!is_operator(exp[i]) && !('0' <= exp[i] && exp[i] <= '9') \
+			&& !(exp[i] == '(' || exp[i] == ')')) {
+			wcout << err_unChar << endl;
+			return false;
+		}
+	}
+	return true;
 }
 
 Precedence Calculator::compare_precedence(wchar_t op1, wchar_t op2)

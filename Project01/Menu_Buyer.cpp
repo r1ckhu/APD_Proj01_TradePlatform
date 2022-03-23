@@ -50,6 +50,7 @@ void BuyerMenu::inputloop(UserData* user)
 
 void BuyerMenu::show_commodity(UserData* user)
 {
+	// TODO: output not right
 	wstring command(L"SELECT * FROM commodity");
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	sql_interpreter.interpret(command);
@@ -157,7 +158,7 @@ void BuyerMenu::search_commodity(UserData* user)
 
 void BuyerMenu::show_history(UserData* user)
 {
-	wstring command(L"SELECT * FROM order WHERE buyerID CONTAINS" + user->get_id());
+	wstring command(L"SELECT * FROM order WHERE buyerID CONTAINS " + user->get_id());
 	list<OrderData>* _list = (list<OrderData>*)sql_interpreter.interpret(command);
 	formatting_output(_list);
 	command = L"SELECT * FROM order";

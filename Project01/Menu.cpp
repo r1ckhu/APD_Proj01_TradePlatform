@@ -4,6 +4,7 @@
 #include <iomanip>
 extern UserHandler userhandler;
 extern SQL_Interpreter sql_interpreter;
+extern Calculator calculator;
 using namespace std;
 const int WIDTH = 15;
 
@@ -88,7 +89,7 @@ void DefaultMenu::printMenu()
 {
 	putnch('\n', 2);
 	putnch('=', 47);
-	wcout << L"1.Admin Login 2.User Register 3.User Login 4.Exit" << endl;
+	wcout << L"1.Admin Login 2.User Register 3.User Login 4.Exit 5.Calculator" << endl;
 	putnch('=', 47);
 }
 
@@ -98,7 +99,7 @@ void DefaultMenu::inputloop(UserData* user)
 	while (true) {
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		InputHandler::inputCommand(input, 1, 4);
+		InputHandler::inputCommand(input, 1, 5);
 		if (input == 1) {
 			UserData* user = userhandler.adminlogin();
 			if (user != nullptr) {
@@ -119,6 +120,18 @@ void DefaultMenu::inputloop(UserData* user)
 		}
 		else if (input == 4) {
 			exit(0);
+		}
+		else if (input == 5) {
+			wstring ws;
+			wcin.get();
+			wprintf(L"Please enter an arithmetic expression:");
+			getline(wcin, ws);
+			while (ws != L"exit") {
+				float ans = calculator.calexp(ws);
+				wcout << ans << endl << endl;
+				wprintf(L"Please enter an arithmetic expression:");
+				getline(wcin, ws);
+			}
 		}
 	}
 };

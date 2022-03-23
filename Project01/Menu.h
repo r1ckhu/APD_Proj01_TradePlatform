@@ -1,6 +1,7 @@
 #pragma once
 #include "Data.h"
 #include "InputHandler.h"
+#include "Calculator.h"
 class Menu
 {
 public:
