@@ -34,7 +34,7 @@ UserData* UserHandler::userlogin()
 	InputHandler::inputString(password, 20, true, true);
 	Table<UserData>* usertable = datahandler.get_user_table();
 	UserData* ud = usertable->find_byName(name);
-	if (ud->is_banned()) {
+	if (ud != nullptr && ud->is_banned()) {
 		wcout << "----You have been banned! Please contact Administrator for help.----" << endl;
 		return nullptr;
 	}
