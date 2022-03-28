@@ -180,9 +180,33 @@ void BuyerMenu::search_commodity(UserData* user)
 	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
-	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
-	formatting_output(_list, true);
+	list<pair<CommodityData, int>>* _list = (list<pair<CommodityData, int>>*)sql_interpreter.interpret(command);
+	char csign = ' ';
+	putnch('*', 30);
+	wprintf(L"---Please select the sorting order.---\n");
+	// TODO: can add more
+	wprintf(L"   (Default) enter for by relevance \n");
+	wprintf(L"   1 for by price (low->high)\n");
+	wprintf(L"   2 for by price (high->low)\n");
+	putnch('*', 30);
+	wprintf(L"Please enter the sorting order: ");
+	csign = getchar();
+	//wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	wcout << endl;
+	if (csign == '1') {
+		_list->sort([](pair<CommodityData, int>& p1, pair<CommodityData, int>& p2) {
+			return p1.first.get_price() < p2.first.get_price();
+			});
+	}
+	else if (csign == '2') {
+		_list->sort([](pair<CommodityData, int>& p1, pair<CommodityData, int>& p2) {
+			return p1.first.get_price() > p2.first.get_price();
+			});
+	}
+	formatting_output(_list);
 	sql_interpreter.interpret(command);
+	if (csign != '\n')
+		wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	delete _list;
 }
 

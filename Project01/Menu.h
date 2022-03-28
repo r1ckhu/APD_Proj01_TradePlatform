@@ -13,7 +13,7 @@ public:
 	void putnch(char ch, int n, bool changeline = true);
 	void putnch(wchar_t wch, int n, bool changeline = true);
 	void formatting_output(list<CommodityData>* _list, bool onlyOnSale = false);
-	void formatting_output(list<CommodityData>* _list, UserData* user);
+	void formatting_output(list<pair<CommodityData,int>>* _list);
 	void formatting_output(list<UserData>* _list);
 	void formatting_output(list<UserData>* _list, UserData* user);
 	void formatting_output(list<OrderData>* _list);

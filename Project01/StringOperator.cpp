@@ -49,7 +49,7 @@ int StringOperator::fuzzy_match(wstring& pattern, wstring& str, int& score)
 				_score += Camel_case_bonus;
 			}
 			if (combo) {
-				_score += 5;
+				_score += Consecutive_match_bonus;
 				if (pattern[i] == ' ') {
 					_score += Separator_bonus;
 				}
@@ -63,6 +63,7 @@ int StringOperator::fuzzy_match(wstring& pattern, wstring& str, int& score)
 				_score += Unmatched_leading_letter;
 			else
 				_score += Unmatched_letter;
+			combo = false;
 			j++;
 		}
 	}

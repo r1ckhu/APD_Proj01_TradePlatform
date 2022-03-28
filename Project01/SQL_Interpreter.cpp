@@ -169,22 +169,23 @@ bool cmp(pair<T, int> p1, pair<T, int> p2)
 template<typename T>
 void* SQL_Interpreter::fuzzy_select(wstring& name, Table<T>* table)
 {
-	list< pair<T, int> >* temp = new list< pair<T, int> >;
-	list<T>* dst = new list<T>;
+	/*list< pair<T, int> >* temp = new list< pair<T, int> >;
+	list<T>* dst = new list<T>;*/
+	list<pair<T, int>>* dst = new list<pair<T, int>>;
 	typename list<T>::iterator it;
 	for (it = table->_list.begin(); it != table->_list.end(); it++) {
 		int score = 0;
 		if (StringOperator::fuzzy_match(name, it->name, score) >= 0) {
-			temp->emplace_back(*it, score);
+			dst->emplace_back(*it, score);
 		}
 	}
-	temp->sort([](const pair<T, int>& p1, const pair<T, int>& p2) {
+	dst->sort([](const pair<T, int>& p1, const pair<T, int>& p2) {
 		return p1.second > p2.second;
 		});
-	typename list< pair<T, int> >::iterator itt;
+	/*typename list< pair<T, int> >::iterator itt;
 	for (itt = temp->begin(); itt != temp->end(); itt++) {
 		dst->push_back(itt->first);
-	}
+	}*/
 	return dst;
 }
 

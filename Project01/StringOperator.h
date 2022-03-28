@@ -4,7 +4,7 @@
 using namespace std;
 const int Matched_letter = 0;
 const int Unmatched_letter = -1;
-const int Consecutive_match_bonus = +6;
+const int Consecutive_match_bonus = 3;
 const int Separator_bonus = 10;
 const int Camel_case_bonus = 10;
 const int Unmatched_leading_letter = -2;

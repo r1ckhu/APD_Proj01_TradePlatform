@@ -181,7 +181,6 @@ float InfoMenu::cal_balance(UserData* user)
 				map_exp.insert(pair<int, vector<float>>(mul, v));
 			}
 		}
-
 	}
 	wifstream in_balance(fpath_balance, ios::in);
 	wstring id;
