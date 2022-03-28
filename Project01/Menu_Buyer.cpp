@@ -180,24 +180,9 @@ void BuyerMenu::search_commodity(UserData* user)
 	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
-	int isign = 1;
-
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	formatting_output(_list, true);
 	sql_interpreter.interpret(command);
-	/*while (isign != 0)
-	{
-		int old_sign = isign;
-		wcout << L"Please choose the sorting order (1 for relevance,2 for price, 0 for exit):";
-		InputHandler::inputCommand(isign, 0, 2);
-		if (old_sign != isign) {
-			if (isign == 1) {
-				_list->sort([](const Commodity, const pair<T, int>& p2) {
-					return p1.second > p2.second;
-					})
-			}
-		}
-	}*/
 	delete _list;
 }
 

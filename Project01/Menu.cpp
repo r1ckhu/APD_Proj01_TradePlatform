@@ -101,11 +101,12 @@ void DefaultMenu::inputloop(UserData* user)
 		wprintf(L"Please choose an operation:");
 		InputHandler::inputCommand(input, 1, 5);
 		if (input == 1) {
-			UserData* user = userhandler.adminlogin();
+			user = userhandler.adminlogin();
 			if (user != nullptr) {
 				AdminMenu adminmenu;
 				adminmenu.inputloop(user);
 			}
+			delete user; // admin is a temporary Userdata
 		}
 		else if (input == 2) {
 			userhandler.userRegister();
@@ -116,7 +117,6 @@ void DefaultMenu::inputloop(UserData* user)
 				UserMenu usermenu;
 				usermenu.inputloop(user);
 			}
-
 		}
 		else if (input == 4) {
 			exit(0);
