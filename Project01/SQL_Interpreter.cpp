@@ -195,7 +195,7 @@ void SQL_Interpreter::update_row(wstringstream& values, CommodityData& dst)
 		{
 			if (val == L"onSale")
 				dst.commodity_state = ON_SELL;
-			else if (val == L"offShelf")
+			else if (val == L"removed")
 				dst.commodity_state = OFF_SHELF;
 		}
 	}
@@ -294,7 +294,7 @@ bool SQL_Interpreter::is_col_eql_val(wstringstream& ws_val, wstring& col, wstrin
 	else if (col == L"state") {
 		if (val == L"onSale" && tar.commodity_state == ON_SELL)
 			return true;
-		else if (val == L"offShelf" && tar.commodity_state == OFF_SHELF)
+		else if (val == L"removed" && tar.commodity_state == OFF_SHELF)
 			return true;
 	}
 	return false;
@@ -364,7 +364,7 @@ void SQL_Interpreter::appendfile(CommodityData& cd)
 	if (cd.commodity_state == ON_SELL)
 		output << L"onSale" << endl;
 	else if (cd.commodity_state == OFF_SHELF)
-		output << L"offShelf" << endl;
+		output << L"removed" << endl;
 	output.close();
 }
 void SQL_Interpreter::appendfile(UserData& ud)
@@ -403,7 +403,7 @@ void SQL_Interpreter::writefile(DATA_TYPES dt)
 			if ((*it).commodity_state == ON_SELL)
 				output << L"onSale" << endl;
 			else if ((*it).commodity_state == OFF_SHELF)
-				output << L"offShelf" << endl;*/
+				output << L"removed" << endl;*/
 			output << (*it) << endl;
 		}
 		output.close();

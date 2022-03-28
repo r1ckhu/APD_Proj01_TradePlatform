@@ -92,7 +92,7 @@ void AdminMenu::remove_commodity()
 		wchar_t sign;
 		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
-			command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
+			command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
 			command += id;
 			sql_interpreter.interpret(command);
 			wprintf(L"Operation Successful!\n\n");
@@ -144,7 +144,7 @@ void AdminMenu::ban_user()
 			command += id;
 			sql_interpreter.interpret(command);
 			wprintf(L"Operation Successful!\n\n");
-			command = L"UPDATE commodity SET state = offShelf WHERE sellerID = ";
+			command = L"UPDATE commodity SET state = removed WHERE sellerID = ";
 			command += id;
 			sql_interpreter.interpret(command);
 		}

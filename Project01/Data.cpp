@@ -358,7 +358,7 @@ wofstream& operator<<(wofstream& output, const CommodityData& cd)
 	if (cd.commodity_state == ON_SELL)
 		output << L"onSale";
 	else if (cd.commodity_state == OFF_SHELF)
-		output << L"offShelf";
+		output << L"removed";
 	return output;
 }
 
@@ -368,7 +368,7 @@ void CommodityData::format_output(int width)
 		<< setw(width) << price << setw(width) << quantity
 		<< setw(width) << description << setw(width) << seller_id
 		<< setw(width) << time_on_shelf << setw(width)
-		<< setw(width) << (commodity_state == ON_SELL ? L"onSale" : L"offShelf") << endl;
+		<< setw(width) << (commodity_state == ON_SELL ? L"onSale" : L"removed") << endl;
 }
 
 wostream& operator<<(wostream& output, const OrderData& od)

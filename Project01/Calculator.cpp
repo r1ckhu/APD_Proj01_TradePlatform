@@ -207,7 +207,7 @@ bool Calculator::is_valid_expression(wstring& exp)
 			}
 			else if (i == 0 && exp[i] == '~')
 				continue;
-			if (is_operator(exp[i - 1]) || is_operator(exp[i + 1])) {
+			if (is_operator(exp[i - 1]) || is_operator(exp[i + 1]) || exp[i+1]==')' ) {
 				// TODO: This may be legal
 				wcout << err_op << endl;
 				return false;

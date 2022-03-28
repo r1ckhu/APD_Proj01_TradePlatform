@@ -69,7 +69,7 @@ void BuyerMenu::show_commodity(UserData* user)
 				<< setw(WIDTH) << (*it).get_price() << setw(WIDTH) << (*it).get_quantity()
 				<< setw(WIDTH) << (*it).get_seller_id()
 				<< setw(WIDTH) << (*it).time_on_shelf << setw(WIDTH)
-				<< setw(WIDTH) << ((*it).get_commodity_state() == ON_SELL ? L"onSale" : L"offShelf") << endl;
+				<< setw(WIDTH) << ((*it).get_commodity_state() == ON_SELL ? L"onSale" : L"removed") << endl;
 		}
 
 	}
@@ -157,7 +157,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 
 			if (cd->get_quantity() == 0)
 			{
-				command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
+				command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
 				command += id;
 				sql_interpreter.interpret(command);
 				sql_interpreter.log(command);
@@ -180,9 +180,24 @@ void BuyerMenu::search_commodity(UserData* user)
 	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
+	int isign = 1;
+
 	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
 	formatting_output(_list, true);
 	sql_interpreter.interpret(command);
+	/*while (isign != 0)
+	{
+		int old_sign = isign;
+		wcout << L"Please choose the sorting order (1 for relevance,2 for price, 0 for exit):";
+		InputHandler::inputCommand(isign, 0, 2);
+		if (old_sign != isign) {
+			if (isign == 1) {
+				_list->sort([](const Commodity, const pair<T, int>& p2) {
+					return p1.second > p2.second;
+					})
+			}
+		}
+	}*/
 	delete _list;
 }
 

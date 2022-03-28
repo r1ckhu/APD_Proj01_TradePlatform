@@ -215,7 +215,7 @@ void SellerMenu::remove_commodity(UserData* user)
 		wchar_t sign;
 		InputHandler::inputConfirm(sign);
 		if (sign == 'y') {
-			command = L"UPDATE commodity SET state = offShelf WHERE commodityID = ";
+			command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
 			command += id;
 			sql_interpreter.interpret(command);
 			sql_interpreter.log(command);
