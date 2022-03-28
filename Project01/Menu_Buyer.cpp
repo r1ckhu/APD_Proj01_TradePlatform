@@ -265,7 +265,7 @@ void BuyerMenu::show_detail(UserData* user)
 	putnch('*', 30);
 }
 
-void BuyerMenu::check_cart(UserData* user)
+void BuyerMenu::show_cart(UserData* user)
 {
 	int WIDTH = 15;
 	putnch('*', 100);
@@ -278,3 +278,88 @@ void BuyerMenu::check_cart(UserData* user)
 	}
 	putnch('*', 100);
 }
+
+void BuyerMenu::modify_cart(UserData* user)
+{
+	wstring command;
+	int serialNumber = 0, quantity = 0;
+	wchar_t sign;
+	wprintf(L"Please enter the commodity's serial number in the cart:");
+	if (!InputHandler::inputInt(serialNumber)) {
+		InputHandler::throwError();
+		return;
+	}
+	if (serialNumber > user->cart.size() || serialNumber <= 0) {
+		InputHandler::throwError();
+		return;
+	}
+	OrderData& od = user->cart[serialNumber - 1];
+	wprintf(L"Please enter the new quantity you want to buy (0 to remove the item):");
+	if (!InputHandler::inputInt(quantity)) {
+		InputHandler::throwError();
+		return;
+	}
+	if (quantity == 0) {
+		putnch('*', 25);
+		wcout << L"The order to be removed 's SerialNumber: " << serialNumber << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id) << endl;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		InputHandler::inputConfirm(sign);
+		if (sign == 'y') {
+			user->cart.erase(user->cart.begin() + serialNumber - 1);
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	else {
+		putnch('*', 25);
+		wcout << L"The order to be modified 's SerialNumber: " << serialNumber << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id) << endl;
+		wcout << L"The new quantity: " << quantity << endl;;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		InputHandler::inputConfirm(sign);
+		if (sign == 'y') {
+			od.quantity = quantity;
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+}
+
+void BuyerMenu::check_cart(UserData* user)
+{
+	int input = 0;
+	while (true) {
+		putnch('\n', 2);
+		putnch('-', 100);
+		putnch('*', 15, false);
+		wprintf(L"The Shopping Cart subMenu");
+		putnch('*', 15);
+		wcout << endl;
+		wprintf(L"1.Show 2.Modify 3.Checkout 4.Return to BuyerMenu\n");
+		putnch('-', 100);
+		wprintf(L"Please choose an operation:");
+		InputHandler::inputCommand(input, 1, 4);
+		if (input == 1) {
+			show_cart(user);
+			continue;
+		}
+		else if (input == 2) {
+			modify_cart(user);
+			continue;
+		}
+		else if (input == 3) {
+			continue;
+		}
+		else if (input == 4) {
+			return;
+		}
+	}
+}
+

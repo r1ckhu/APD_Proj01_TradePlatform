@@ -58,6 +58,9 @@ public:
 	void show_history(UserData* user);
 	void show_detail(UserData* user);
 	void check_cart(UserData* user);
+	void show_cart(UserData* user);
+	void modify_cart(UserData* user);
+	void checkout_cart(UserData* user);
 };
 
 class SellerMenu : public Menu
