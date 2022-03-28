@@ -134,7 +134,7 @@ void SellerMenu::modify_commodity(UserData* user)
 	InputHandler::inputCommand(isign, 1, 2);
 	if (isign == 1) {
 		wprintf(L"Please enter new price:");
-		if (InputHandler::inputFloat(price)) {
+		if (!InputHandler::inputFloat(price)) {
 			InputHandler::throwError();
 			return;
 		}
