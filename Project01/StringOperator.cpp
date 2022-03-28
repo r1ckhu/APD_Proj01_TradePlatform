@@ -34,3 +34,43 @@ float StringOperator::str2float(wstring& src)
 	wss >> dst;
 	return dst;
 }
+
+int StringOperator::fuzzy_match(wstring& pattern, wstring& str, int& score)
+{
+
+	int i = 0, j = 0;
+	bool combo = false;
+	bool leadingMatched = true;
+	int comboCnt = 0;
+	int _score = 0;
+	while (i < pattern.size() && j < str.size()) {
+		if (tolower(pattern[i]) == tolower(str[j])) {
+			if (pattern[i] == str[i] && pattern[i] > 'A' && pattern[i] < 'Z') {
+				_score += Camel_case_bonus;
+			}
+			if (combo) {
+				_score += Consecutive_match_bonus;
+				if (pattern[i] == ' ') {
+					_score += Separator_bonus;
+				}
+			}
+			else if (!combo)
+				combo = true;
+			i++; j++;
+		}
+		else {
+			if (j < Unmatched_leading_maxCnt)
+				_score += Unmatched_leading_letter;
+			else
+				_score += Unmatched_letter;
+			combo = false;
+			j++;
+		}
+	}
+	if (i == pattern.size())
+		_score += Full_matched;
+	score = _score;
+	return _score;
+}
+
+

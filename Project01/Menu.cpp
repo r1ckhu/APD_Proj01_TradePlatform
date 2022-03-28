@@ -35,6 +35,7 @@ void Menu::formatting_output(list<CommodityData>* _list, bool onlyOnSale)
 		setw(WIDTH) << L"description" << setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
 	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
 	{
+		//TODO: if all the commodity in the list is removed, then will output empty list
 		if (onlyOnSale && (*it).commodity_state == ON_SELL)
 			(*it).format_output(15);
 		else if (!onlyOnSale)
@@ -43,7 +44,7 @@ void Menu::formatting_output(list<CommodityData>* _list, bool onlyOnSale)
 	putnch('*', 100);
 }
 
-void Menu::formatting_output(list<CommodityData>* _list, UserData* user)
+void Menu::formatting_output(list<pair<CommodityData, int>>* _list)
 {
 	if (_list->size() == 0) {
 		wprintf(L"No Commodity Found!\n");
@@ -52,8 +53,9 @@ void Menu::formatting_output(list<CommodityData>* _list, UserData* user)
 	putnch('*', 100);
 	wcout << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"commodityName" << setw(WIDTH) << L"price" << setw(WIDTH) << L"number" <<
 		setw(WIDTH) << L"description" << setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
-	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
-		(*it).format_output(15);
+	for (list<pair<CommodityData, int>>::iterator it = _list->begin(); it != _list->end(); it++)
+		if ((*it).first.get_commodity_state() == ON_SELL)
+			(*it).first.format_output(15);
 	putnch('*', 100);
 }
 

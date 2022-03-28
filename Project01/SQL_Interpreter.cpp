@@ -2,11 +2,7 @@
 #include "SQL_Interpreter.h"
 #include "StringOperator.h"
 #include "Data.h"
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <locale>
-#include <ctime>
+
 using namespace std;
 extern DataHandler datahandler;
 extern locale zh_utf;
@@ -86,7 +82,12 @@ void* SQL_Interpreter::interpret(wstring& statement) {
 			void* dst = nullptr;
 			if (name == L"commodity") {
 				Table<CommodityData>* table = datahandler.get_commodity_table();
-				dst = select<CommodityData>(ws_val, col, val, table);
+				if (col == L"commodityName") {
+					dst = fuzzy_select(val, table);
+				}
+				else {
+					dst = select<CommodityData>(ws_val, col, val, table);
+				}
 			}
 			else if (name == L"order") {
 				Table<OrderData>* table = datahandler.get_order_table();
@@ -148,7 +149,7 @@ void SQL_Interpreter::update(wstringstream& values, wstringstream& ws_val, wstri
 	}
 }
 template<typename T>
-void* SQL_Interpreter::select(wstringstream& ws_val, wstring col, wstring val, Table<T>* table)
+void* SQL_Interpreter::select(wstringstream& ws_val, wstring& col, wstring& val, Table<T>* table)
 {
 	list<T>* dst = new list<T>;
 	typename list<T>::iterator it;
@@ -157,6 +158,34 @@ void* SQL_Interpreter::select(wstringstream& ws_val, wstring col, wstring val, T
 		if (is_col_eql_val(ws_val, col, val, *it))
 			dst->push_back(*it);
 	}
+	return dst;
+}
+template<typename T>
+bool cmp(pair<T, int> p1, pair<T, int> p2)
+{
+	return p1.second > p2.second;
+}
+
+template<typename T>
+void* SQL_Interpreter::fuzzy_select(wstring& name, Table<T>* table)
+{
+	/*list< pair<T, int> >* temp = new list< pair<T, int> >;
+	list<T>* dst = new list<T>;*/
+	list<pair<T, int>>* dst = new list<pair<T, int>>;
+	typename list<T>::iterator it;
+	for (it = table->_list.begin(); it != table->_list.end(); it++) {
+		int score = 0;
+		if (StringOperator::fuzzy_match(name, it->name, score) >= 0) {
+			dst->emplace_back(*it, score);
+		}
+	}
+	dst->sort([](const pair<T, int>& p1, const pair<T, int>& p2) {
+		return p1.second > p2.second;
+		});
+	/*typename list< pair<T, int> >::iterator itt;
+	for (itt = temp->begin(); itt != temp->end(); itt++) {
+		dst->push_back(itt->first);
+	}*/
 	return dst;
 }
 
