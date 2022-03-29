@@ -344,13 +344,19 @@ void BuyerMenu::checkout_cart(UserData* user)
 		for (int i = 0; i < user->cart.size(); i++) {
 			OrderData& od = user->cart[i];
 			CommodityData* cd = datahandler.get_commodity_table()->find_byID(od.commodity_id);
-			wcout << "For SerialNumber: " << i << " commodityName: " << cd->name;
+			if (cd == nullptr) {
+				wcout << L"Unexpected Error" << endl;
+				continue;
+			}
+			wcout << "For SerialNumber:" << i + 1 << "| commodityName: " << cd->name;
 			putnch('.', 6, false);
 			if (od.quantity > cd->get_quantity()) {
+				user->cart.erase(user->cart.begin() + i); i--;
 				wcout << "Failure: Insufficient stock.\n" << endl;
 				continue;
 			}
 			else if (cd->get_commodity_state() == OFF_SHELF) {
+				user->cart.erase(user->cart.begin() + i); i--;
 				wcout << "Failure: Unavailable commodity.\n" << endl;
 				continue;
 			}
@@ -391,9 +397,10 @@ void BuyerMenu::checkout_cart(UserData* user)
 				sql_interpreter.interpret(command);
 				sql_interpreter.log(command);
 			}
+			user->cart.erase(user->cart.begin() + i); i--;
 			wprintf(L"Successful!\n");
 		}
-		user->cart.clear();
+		//user->cart.clear();
 		datahandler.update_cart();
 	}
 	else {
