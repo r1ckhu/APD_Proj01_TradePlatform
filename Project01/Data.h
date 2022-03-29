@@ -3,8 +3,10 @@
 #include <string>
 #include <list>
 #include <fstream>
+#include <vector>
 #include "SQL_Interpreter.h"
 #include "Data.h"
+#include "StringOperator.h"
 using namespace std;
 extern const string fpath_commodity;
 extern const string fpath_order;
@@ -36,33 +38,6 @@ public:
 	wstring name;
 	wstring& get_id();
 	friend class SQL_Interpreter;
-};
-
-class UserData : public Data
-{
-private:
-	wstring password;
-	float balance;
-	UserTypes user_type;
-	bool banned;
-
-public:
-	UserData();
-	UserData(wstringstream& values);
-	wstring address;
-	wstring contact;
-	const wstring& get_password();
-	const float& get_balance();
-	const UserTypes& get_usertype();
-	void set_password(const wstring& s);
-	void set_balance(const float& b);
-	void set_user_type(const UserTypes u_t);
-	bool is_banned();
-	void format_output(int width);
-	friend class SQL_Interpreter;
-	friend class Menu;
-	friend wostream& operator<<(wostream& output, const UserData& ud);
-	friend wofstream& operator<<(wofstream& output, const UserData& ud);
 };
 
 class CommodityData : public Data
@@ -109,6 +84,34 @@ public:
 	friend class Menu;
 	friend wostream& operator<<(wostream& output, const OrderData& od);
 	friend wofstream& operator<<(wofstream& output, const OrderData& od);
+};
+
+class UserData : public Data
+{
+private:
+	wstring password;
+	float balance;
+	UserTypes user_type;
+	bool banned;
+
+public:
+	vector<OrderData> cart;
+	UserData();
+	UserData(wstringstream& values);
+	wstring address;
+	wstring contact;
+	const wstring& get_password();
+	const float& get_balance();
+	const UserTypes& get_usertype();
+	void set_password(const wstring& s);
+	void set_balance(const float& b);
+	void set_user_type(const UserTypes u_t);
+	bool is_banned();
+	void format_output(int width);
+	friend class SQL_Interpreter;
+	friend class Menu;
+	friend wostream& operator<<(wostream& output, const UserData& ud);
+	friend wofstream& operator<<(wofstream& output, const UserData& ud);
 };
 
 
@@ -162,6 +165,8 @@ public:
 	wstring generate_user_id();
 	wstring generate_order_id();
 	wstring get_current_time(bool concise = true);
+	void add_cart(OrderData& od);
+	void update_cart();
 };
 
 

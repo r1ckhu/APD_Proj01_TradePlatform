@@ -1,7 +1,6 @@
 #pragma once
 #pragma warning( disable : 4996)
 #include "Data.h"
-#include "StringOperator.h"
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -13,6 +12,7 @@ const string fpath_commodity = "data\\commodity.txt";
 const string fpath_order = "data\\order.txt";
 const string fpath_command = "data\\commands.txt";
 const string fpath_balance = "data\\balance.txt";
+const string fpath_cart = "data\\cart.txt";
 const wstring user_attribute = L"userID,username,password,phoneNumber,address,balance,userState";
 const wstring commodity_attribute = L"commodityID,commodityName,price,number,description,sellerID,addedDate,state";
 const wstring order_attribute = L"orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
@@ -143,13 +143,14 @@ DataHandler::DataHandler()
 	wifstream in_user(fpath_user, ios::in);
 	wifstream in_commodity(fpath_commodity, ios::in);
 	wifstream in_order(fpath_order, ios::in);
+	wifstream in_cart(fpath_cart, ios::in);
 	in_user.imbue(locale("zh_CN.UTF-8"));
 	in_commodity.imbue(locale("zh_CN.UTF-8"));
 	in_order.imbue(locale("zh_CN.UTF-8"));
 
 	if (!in_user) {
 		wofstream out_user(fpath_user, ios::out);
-		out_user.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
+		// out_user.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_user << user_attribute << endl;
 		out_user.close();
 	}
@@ -172,7 +173,7 @@ DataHandler::DataHandler()
 
 	if (!in_commodity) {
 		wofstream out_commodity(fpath_commodity, ios::out);
-		out_commodity.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
+		// out_commodity.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_commodity << commodity_attribute << endl;
 		out_commodity.close();
 	}
@@ -195,7 +196,7 @@ DataHandler::DataHandler()
 
 	if (!in_order) {
 		wofstream out_order(fpath_order, ios::out);
-		out_order.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
+		// out_order.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
 		out_order << order_attribute << endl;
 		out_order.close();
 	}
@@ -214,6 +215,20 @@ DataHandler::DataHandler()
 			orderTable.cnt++;
 		}
 		in_order.close();
+	}
+
+	if (!in_cart) {
+		wofstream out_cart(fpath_cart, ios::out);
+		// out_cart.imbue(locale(zh_utf, new std::numpunct<wchar_t>));
+		out_cart.close();
+	}
+	else {
+		OrderData od;
+		//output << od.buyer_id << od.commodity_id << od.quantity << od.price << od.seller_id;
+		while (in_cart >> od.buyer_id >> od.commodity_id >> od.quantity >> od.price >> od.seller_id) {
+			if (userTable.find_byID(od.buyer_id) != nullptr)
+				userTable.find_byID(od.buyer_id)->cart.push_back(od);
+		}
 	}
 }
 
@@ -316,6 +331,24 @@ wstring DataHandler::get_current_time(bool concise)
 	return time;
 }
 
+void DataHandler::add_cart(OrderData& od)
+{
+	wofstream output(fpath_cart, ios::app);
+	output << od.buyer_id << ' ' << od.commodity_id << ' ' << od.quantity << ' ' << od.price << ' ' << od.seller_id << endl;
+	output.close();
+}
+
+void DataHandler::update_cart()
+{
+	wofstream output(fpath_cart, ios::out);
+	list<UserData>& _list = userTable._list;
+	for (list<UserData>::iterator it = _list.begin(); it != _list.end(); it++) {
+		for (vector<OrderData>::iterator itt = (*it).cart.begin(); itt != (*it).cart.end(); itt++) {
+			output << (*itt).buyer_id << ' ' << (*itt).commodity_id << ' ' << (*itt).quantity << ' ' << (*itt).price << ' ' << (*itt).seller_id<<endl;
+		}
+	}
+}
+
 wostream& operator<<(wostream& output, const UserData& ud)
 {
 	// userID, username, password, phoneNumber, address, balance, userState
@@ -358,7 +391,7 @@ wofstream& operator<<(wofstream& output, const CommodityData& cd)
 	if (cd.commodity_state == ON_SELL)
 		output << L"onSale";
 	else if (cd.commodity_state == OFF_SHELF)
-		output << L"removed";
+		output << L"offShelf";
 	return output;
 }
 
@@ -368,7 +401,7 @@ void CommodityData::format_output(int width)
 		<< setw(width) << price << setw(width) << quantity
 		<< setw(width) << description << setw(width) << seller_id
 		<< setw(width) << time_on_shelf << setw(width)
-		<< setw(width) << (commodity_state == ON_SELL ? L"onSale" : L"removed") << endl;
+		<< setw(width) << (commodity_state == ON_SELL ? L"onSale" : L"offShelf") << endl;
 }
 
 wostream& operator<<(wostream& output, const OrderData& od)

@@ -12,7 +12,7 @@ void BuyerMenu::printMenu()
 {
 	putnch('\n', 2);
 	putnch('=', 89);
-	wcout << L"1.View All Commodities 2.Purchase Commodities 3.Search Commodities 4.View History Orders 5.View Detailed Commidity Info 6.Return to Main Menu" << endl;
+	wcout << L"1.View All Commodities 2.Purchase Commodities 3.Search Commodities 4.View History Orders 5.View Detailed Commidity Info 6.Show my cart 7.Return to Main Menu" << endl;
 	putnch('=', 89);
 }
 void BuyerMenu::inputloop(UserData* user)
@@ -21,7 +21,7 @@ void BuyerMenu::inputloop(UserData* user)
 	while (true) {
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		InputHandler::inputCommand(input, 1, 6);
+		InputHandler::inputCommand(input, 1, 7);
 		if (input == 1) {
 			show_commodity(user);
 			continue;
@@ -43,6 +43,10 @@ void BuyerMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 6) {
+			check_cart(user);
+			continue;
+		}
+		else if (input == 7) {
 			return;
 		}
 	}
@@ -69,7 +73,7 @@ void BuyerMenu::show_commodity(UserData* user)
 				<< setw(WIDTH) << (*it).get_price() << setw(WIDTH) << (*it).get_quantity()
 				<< setw(WIDTH) << (*it).get_seller_id()
 				<< setw(WIDTH) << (*it).time_on_shelf << setw(WIDTH)
-				<< setw(WIDTH) << ((*it).get_commodity_state() == ON_SELL ? L"onSale" : L"removed") << endl;
+				<< setw(WIDTH) << ((*it).get_commodity_state() == ON_SELL ? L"onSale" : L"offShelf") << endl;
 		}
 
 	}
@@ -80,6 +84,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 {
 	wstring id;
 	int quantity = 0;
+	int isign = 0;
 	wprintf(L"Please enter the commodity's id:");
 	if (!InputHandler::inputString(id, 4, true, true)) {/*id*/
 		InputHandler::throwError();
@@ -90,11 +95,17 @@ void BuyerMenu::buy_commodity(UserData* user)
 		InputHandler::throwError();
 		return;
 	}
+	wprintf(L"Do you want to buy now or add to your cart? (1 for buy now, 2 for add to cart):");
+	if (!InputHandler::inputCommand(isign, 1, 2)) {
+		InputHandler::throwError();
+		wprintf(L"----Operation Terminated.----");
+		return;
+	}
 	Table<CommodityData>* table = datahandler.get_commodity_table();
 	CommodityData* cd = table->find_byID(id);
 	if (cd != nullptr)
 	{
-		if (user->get_balance() < cd->get_price() * quantity) {
+		if (isign == 1 && user->get_balance() < cd->get_price() * quantity) {
 			wprintf(L"-----Insufficient balance in your account! Operation Terminated.-----");
 			return;
 		}
@@ -117,52 +128,67 @@ void BuyerMenu::buy_commodity(UserData* user)
 		wcout << cd->get_id() << endl;
 		wprintf(L"The commodity name is: ");
 		wcout << cd->name << endl;
-		wprintf(L"The transaction time is:");
-		wcout << datahandler.get_current_time() << endl;
 		wprintf(L"The quantity you choose is:");
 		wcout << quantity << endl;
-		wprintf(L"Your balance after purchasing is: ");
-		wcout << user->get_balance() - cd->get_price() * quantity << endl;
+		if (isign == 1) {
+			wprintf(L"The transaction time is:");
+			wcout << datahandler.get_current_time() << endl;
+			wprintf(L"Your balance after purchasing is: ");
+			wcout << user->get_balance() - cd->get_price() * quantity << endl;
+		}
 		putnch('*', 30);
 		wprintf(L"Please confirm your choice (y/n): ");
 		wchar_t sign;
 		InputHandler::inputConfirm(sign);
 		if (sign == 'y')
 		{
-			wstringstream wss;
-			wstring command;
-			user->set_balance(user->get_balance() - cd->get_price() * quantity);
-			wss << L"UPDATE user SET balance = " << user->get_balance()\
-				<< L" WHERE userID = " << user->get_id();
-			command = wss.str();
-			sql_interpreter.interpret(command);
+			if (isign == 1) { // Purchase now
+				wstringstream wss;
+				wstring command;
+				user->set_balance(user->get_balance() - cd->get_price() * quantity);
+				wss << L"UPDATE user SET balance = " << user->get_balance()\
+					<< L" WHERE userID = " << user->get_id();
+				command = wss.str();
+				sql_interpreter.interpret(command);
 
-			wss.str(L" ");
-			wss.seekg(0);
-			wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
-				<< id << ',' << cd->get_price() << ','\
-				<< quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
-				<< ',' << user->get_id() << ')';
-			command = wss.str();
-			sql_interpreter.interpret(command);
-			sql_interpreter.log(command);
-
-			wss.str(L" ");
-			wss.seekg(0);
-			wss << L"UPDATE commodity SET number = " << cd->get_quantity() - quantity \
-				<< " WHERE commodityID = " << id;
-			command = wss.str();
-			sql_interpreter.interpret(command);
-			sql_interpreter.log(command);
-
-			if (cd->get_quantity() == 0)
-			{
-				command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
-				command += id;
+				wss.str(L" ");
+				wss.seekg(0);
+				wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
+					<< id << ',' << cd->get_price() << ','\
+					<< quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
+					<< ',' << user->get_id() << ')';
+				command = wss.str();
 				sql_interpreter.interpret(command);
 				sql_interpreter.log(command);
+
+				wss.str(L" ");
+				wss.seekg(0);
+				wss << L"UPDATE commodity SET number = " << cd->get_quantity() - quantity \
+					<< " WHERE commodityID = " << id;
+				command = wss.str();
+				sql_interpreter.interpret(command);
+				sql_interpreter.log(command);
+
+				if (cd->get_quantity() == 0)
+				{
+					command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
+					command += id;
+					sql_interpreter.interpret(command);
+					sql_interpreter.log(command);
+				}
+				wprintf(L"-----Purchase successful!-----");
 			}
-			wprintf(L"-----Purchase successful!-----");
+			else if (isign == 2) { // add to the cart
+				wstringstream wss;
+				OrderData od;
+				od.buyer_id = user->get_id();
+				od.commodity_id = cd->get_id();
+				od.quantity = quantity;
+				od.price = cd->get_price();
+				od.seller_id = cd->get_seller_id();
+				user->cart.push_back(od);
+				datahandler.add_cart(od);
+			}
 		}
 	}
 	else {
@@ -238,3 +264,179 @@ void BuyerMenu::show_detail(UserData* user)
 	wcout << L"The seller ID is:" << cd->get_seller_id() << endl;
 	putnch('*', 30);
 }
+
+void BuyerMenu::show_cart(UserData* user)
+{
+	int WIDTH = 15;
+	putnch('*', 100);
+	wcout << setw(WIDTH) << L"SerialNumber" << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"unitPrice" << setw(WIDTH) << L"number" \
+		<< setw(WIDTH) << L"sellerID" << endl;
+	for (int i = 0; i < user->cart.size(); i++) {
+		wcout << setw(WIDTH) << i + 1 << setw(WIDTH) << user->cart[i].commodity_id
+			<< setw(WIDTH) << user->cart[i].price << setw(WIDTH) << user->cart[i].quantity
+			<< setw(WIDTH) << user->cart[i].seller_id << endl;
+	}
+	putnch('*', 100);
+}
+
+void BuyerMenu::modify_cart(UserData* user)
+{
+	wstring command;
+	int serialNumber = 0, quantity = 0;
+	wchar_t sign;
+	wprintf(L"Please enter the commodity's serial number in the cart:");
+	if (!InputHandler::inputInt(serialNumber)) {
+		InputHandler::throwError();
+		return;
+	}
+	if (serialNumber > user->cart.size() || serialNumber <= 0) {
+		InputHandler::throwError();
+		return;
+	}
+	OrderData& od = user->cart[serialNumber - 1];
+	wprintf(L"Please enter the new quantity you want to buy (0 to remove the item):");
+	if (!InputHandler::inputInt(quantity)) {
+		InputHandler::throwError();
+		return;
+	}
+	if (quantity == 0) {
+		putnch('*', 25);
+		wcout << L"The order to be removed 's SerialNumber: " << serialNumber << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id)->name << endl;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		InputHandler::inputConfirm(sign);
+		if (sign == 'y') {
+			user->cart.erase(user->cart.begin() + serialNumber - 1);
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	else {
+		putnch('*', 25);
+		wcout << L"The order to be modified 's SerialNumber: " << serialNumber << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id)->name << endl;
+		wcout << L"The new quantity: " << quantity << endl;;
+		putnch('*', 25);
+		wprintf(L"\nPlease confirm your choice (y/n):");
+		InputHandler::inputConfirm(sign);
+		if (sign == 'y') {
+			od.quantity = quantity;
+			wprintf(L"Operation Successful!\n\n");
+		}
+		else {
+			wprintf(L"Operation Terminated!\n\n");
+		}
+	}
+	datahandler.update_cart();
+}
+
+void BuyerMenu::checkout_cart(UserData* user)
+{
+	wchar_t ch = ' ';
+	wprintf(L"This is your current cart.\n");
+	show_cart(user);
+	wprintf(L"Please confirm (y/n): ");
+	InputHandler::inputConfirm(ch);
+	if (ch == 'y') {
+		for (int i = 0; i < user->cart.size(); i++) {
+			OrderData& od = user->cart[i];
+			CommodityData* cd = datahandler.get_commodity_table()->find_byID(od.commodity_id);
+			if (cd == nullptr) {
+				wcout << L"Unexpected Error" << endl;
+				continue;
+			}
+			wcout << "For SerialNumber:" << i + 1 << "| commodityName: " << cd->name;
+			putnch('.', 6, false);
+			if (od.quantity > cd->get_quantity()) {
+				user->cart.erase(user->cart.begin() + i); i--;
+				wcout << "Failure: Insufficient stock.\n" << endl;
+				continue;
+			}
+			else if (cd->get_commodity_state() == OFF_SHELF) {
+				user->cart.erase(user->cart.begin() + i); i--;
+				wcout << "Failure: Unavailable commodity.\n" << endl;
+				continue;
+			}
+			else if (cd->get_price() * od.quantity > user->get_balance()) {
+				wcout << "Failure: Insufficient balance.\n" << endl;
+				continue;
+			}
+			wstringstream wss;
+			wstring command;
+			user->set_balance(user->get_balance() - cd->get_price() * od.quantity);
+			wss << L"UPDATE user SET balance = " << user->get_balance()\
+				<< L" WHERE userID = " << user->get_id();
+			command = wss.str();
+			sql_interpreter.interpret(command);
+
+			wss.str(L" ");
+			wss.seekg(0);
+			wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
+				<< cd->get_id() << ',' << cd->get_price() << ','\
+				<< od.quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
+				<< ',' << user->get_id() << ')';
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+
+			wss.str(L" ");
+			wss.seekg(0);
+			wss << L"UPDATE commodity SET number = " << cd->get_quantity() - od.quantity \
+				<< " WHERE commodityID = " << cd->get_id();
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+
+			if (cd->get_quantity() == 0)
+			{
+				command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
+				command += cd->get_id();
+				sql_interpreter.interpret(command);
+				sql_interpreter.log(command);
+			}
+			user->cart.erase(user->cart.begin() + i); i--;
+			wprintf(L"Successful!\n");
+		}
+		//user->cart.clear();
+		datahandler.update_cart();
+	}
+	else {
+		wprintf(L"Operation Terminated!\n\n");
+		return;
+	}
+}
+
+void BuyerMenu::check_cart(UserData* user)
+{
+	int input = 0;
+	while (true) {
+		putnch('\n', 2);
+		putnch('-', 100);
+		putnch('*', 12, false);
+		wprintf(L"  The Shopping Cart subMenu  ");
+		putnch('*', 12);
+		wcout << endl;
+		wprintf(L"1.Show 2.Modify 3.Checkout 4.Return to BuyerMenu\n");
+		putnch('-', 100);
+		wprintf(L"Please choose an operation:");
+		InputHandler::inputCommand(input, 1, 4);
+		if (input == 1) {
+			show_cart(user);
+			continue;
+		}
+		else if (input == 2) {
+			modify_cart(user);
+			continue;
+		}
+		else if (input == 3) {
+			checkout_cart(user);
+		}
+		else if (input == 4) {
+			return;
+		}
+	}
+}
+

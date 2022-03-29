@@ -7,6 +7,9 @@
 #include "InputHandler.h"
 #include <locale>
 #include <iomanip>
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
 DataHandler datahandler;
 UserHandler userhandler;
 SQL_Interpreter sql_interpreter;
