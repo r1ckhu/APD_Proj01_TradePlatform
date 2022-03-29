@@ -105,7 +105,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 	CommodityData* cd = table->find_byID(id);
 	if (cd != nullptr)
 	{
-		if (user->get_balance() < cd->get_price() * quantity) {
+		if (isign == 1 && user->get_balance() < cd->get_price() * quantity) {
 			wprintf(L"-----Insufficient balance in your account! Operation Terminated.-----");
 			return;
 		}
@@ -317,7 +317,7 @@ void BuyerMenu::modify_cart(UserData* user)
 	else {
 		putnch('*', 25);
 		wcout << L"The order to be modified 's SerialNumber: " << serialNumber << endl;
-		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id) << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id)->name << endl;
 		wcout << L"The new quantity: " << quantity << endl;;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
@@ -333,15 +333,84 @@ void BuyerMenu::modify_cart(UserData* user)
 	datahandler.update_cart();
 }
 
+void BuyerMenu::checkout_cart(UserData* user)
+{
+	wchar_t ch = ' ';
+	wprintf(L"This is your current cart.\n");
+	show_cart(user);
+	wprintf(L"Please confirm (y/n): ");
+	InputHandler::inputConfirm(ch);
+	if (ch == 'y') {
+		for (int i = 0; i < user->cart.size(); i++) {
+			OrderData& od = user->cart[i];
+			CommodityData* cd = datahandler.get_commodity_table()->find_byID(od.commodity_id);
+			wcout << "For SerialNumber: " << i << " commodityName: " << cd->name;
+			putnch('.', 6, false);
+			if (od.quantity > cd->get_quantity()) {
+				wcout << "Failure: Insufficient stock.\n" << endl;
+				continue;
+			}
+			else if (cd->get_commodity_state() == OFF_SHELF) {
+				wcout << "Failure: Unavailable commodity.\n" << endl;
+				continue;
+			}
+			else if (cd->get_price() * od.quantity > user->get_balance()) {
+				wcout << "Failure: Insufficient balance.\n" << endl;
+				continue;
+			}
+			wstringstream wss;
+			wstring command;
+			user->set_balance(user->get_balance() - cd->get_price() * od.quantity);
+			wss << L"UPDATE user SET balance = " << user->get_balance()\
+				<< L" WHERE userID = " << user->get_id();
+			command = wss.str();
+			sql_interpreter.interpret(command);
+
+			wss.str(L" ");
+			wss.seekg(0);
+			wss << L"INSERT INTO order VALUES (" << datahandler.generate_order_id() << ',' \
+				<< cd->get_id() << ',' << cd->get_price() << ','\
+				<< od.quantity << ',' << datahandler.get_current_time() << ',' << cd->get_seller_id() \
+				<< ',' << user->get_id() << ')';
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+
+			wss.str(L" ");
+			wss.seekg(0);
+			wss << L"UPDATE commodity SET number = " << cd->get_quantity() - od.quantity \
+				<< " WHERE commodityID = " << cd->get_id();
+			command = wss.str();
+			sql_interpreter.interpret(command);
+			sql_interpreter.log(command);
+
+			if (cd->get_quantity() == 0)
+			{
+				command = L"UPDATE commodity SET state = removed WHERE commodityID = ";
+				command += cd->get_id();
+				sql_interpreter.interpret(command);
+				sql_interpreter.log(command);
+			}
+			wprintf(L"Successful!\n");
+		}
+		user->cart.clear();
+		datahandler.update_cart();
+	}
+	else {
+		wprintf(L"Operation Terminated!\n\n");
+		return;
+	}
+}
+
 void BuyerMenu::check_cart(UserData* user)
 {
 	int input = 0;
 	while (true) {
 		putnch('\n', 2);
 		putnch('-', 100);
-		putnch('*', 15, false);
-		wprintf(L"The Shopping Cart subMenu");
-		putnch('*', 15);
+		putnch('*', 12, false);
+		wprintf(L"  The Shopping Cart subMenu  ");
+		putnch('*', 12);
 		wcout << endl;
 		wprintf(L"1.Show 2.Modify 3.Checkout 4.Return to BuyerMenu\n");
 		putnch('-', 100);
@@ -356,7 +425,7 @@ void BuyerMenu::check_cart(UserData* user)
 			continue;
 		}
 		else if (input == 3) {
-			continue;
+			checkout_cart(user);
 		}
 		else if (input == 4) {
 			return;
