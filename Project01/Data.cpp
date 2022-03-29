@@ -225,9 +225,10 @@ DataHandler::DataHandler()
 	else {
 		OrderData od;
 		//output << od.buyer_id << od.commodity_id << od.quantity << od.price << od.seller_id;
-		in_cart >> od.buyer_id >> od.commodity_id >> od.quantity >> od.price >> od.seller_id;
-		if(userTable.find_byID(od.buyer_id)!=nullptr)
-			userTable.find_byID(od.buyer_id)->cart.push_back(od);
+		while (in_cart >> od.buyer_id >> od.commodity_id >> od.quantity >> od.price >> od.seller_id) {
+			if (userTable.find_byID(od.buyer_id) != nullptr)
+				userTable.find_byID(od.buyer_id)->cart.push_back(od);
+		}
 	}
 }
 
@@ -343,7 +344,7 @@ void DataHandler::update_cart()
 	list<UserData>& _list = userTable._list;
 	for (list<UserData>::iterator it = _list.begin(); it != _list.end(); it++) {
 		for (vector<OrderData>::iterator itt = (*it).cart.begin(); itt != (*it).cart.end(); itt++) {
-			output << (*itt).buyer_id << (*itt).commodity_id << (*itt).quantity << (*itt).price << (*itt).seller_id;
+			output << (*itt).buyer_id << ' ' << (*itt).commodity_id << ' ' << (*itt).quantity << ' ' << (*itt).price << ' ' << (*itt).seller_id<<endl;
 		}
 	}
 }

@@ -100,7 +100,10 @@ void InfoMenu::modify_info(UserData* user)
 	else if (isign == 2)
 	{
 		wprintf(L"Please enter new phone number:");
-		InputHandler::inputNumber(contact, 20);
+		if (!InputHandler::inputNumber(contact, 20)) {
+			InputHandler::throwError();
+			return;
+		}
 		putnch('*', 25);
 		wcout << L"Your phone number wiil be: " << contact << endl;
 		putnch('*', 25);
@@ -122,7 +125,10 @@ void InfoMenu::modify_info(UserData* user)
 	else if (isign == 3)
 	{
 		wprintf(L"Please enter new address:");
-		InputHandler::inputString(address, 40, false, true);
+		if (!InputHandler::inputString(address, 40, false, true)) {
+			InputHandler::throwError();
+			return;
+		}
 		putnch('*', 25);
 		wcout << L"Your address wiil be: " << address << endl;
 		putnch('*', 25);

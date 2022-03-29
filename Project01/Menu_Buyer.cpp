@@ -302,7 +302,7 @@ void BuyerMenu::modify_cart(UserData* user)
 	if (quantity == 0) {
 		putnch('*', 25);
 		wcout << L"The order to be removed 's SerialNumber: " << serialNumber << endl;
-		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id) << endl;
+		wcout << L"The commodity's name: " << datahandler.get_commodity_table()->find_byID(od.commodity_id)->name << endl;
 		putnch('*', 25);
 		wprintf(L"\nPlease confirm your choice (y/n):");
 		InputHandler::inputConfirm(sign);
@@ -330,6 +330,7 @@ void BuyerMenu::modify_cart(UserData* user)
 			wprintf(L"Operation Terminated!\n\n");
 		}
 	}
+	datahandler.update_cart();
 }
 
 void BuyerMenu::check_cart(UserData* user)

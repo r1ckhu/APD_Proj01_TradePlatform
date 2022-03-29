@@ -121,6 +121,7 @@ void DefaultMenu::inputloop(UserData* user)
 			}
 		}
 		else if (input == 4) {
+			//_CrtDumpMemoryLeaks();
 			exit(0);
 		}
 		else if (input == 5) {
