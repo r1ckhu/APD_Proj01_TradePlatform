@@ -8,7 +8,7 @@ void UserMenu::printMenu()
 {
 	putnch('\n', 2);
 	putnch('=', 49);
-	wcout << L"1.I am a Buyer 2.I am a Seller 3.Manage Personal Info 4.Logout" << endl;
+	wcout << L"1.I am a Buyer 2.I am a Seller 3.Manage Personal Info 4.Chat 5.Logout" << endl;
 	putnch('=', 49);
 }
 void UserMenu::inputloop(UserData* user)
@@ -17,7 +17,7 @@ void UserMenu::inputloop(UserData* user)
 	while (true) {
 		printMenu();
 		wprintf(L"Please choose an operation:");
-		InputHandler::inputCommand(input, 1, 4);
+		InputHandler::inputCommand(input, 1, 5);
 		if (input == 1) {
 			BuyerMenu buyermenu;
 			buyermenu.inputloop(user);
@@ -32,6 +32,10 @@ void UserMenu::inputloop(UserData* user)
 			continue;
 		}
 		else if (input == 4) {
+			ChatMenu chatmenu;
+			chatmenu.inputloop(user);
+		}
+		else if (input == 5) {
 			return;
 		}
 	}

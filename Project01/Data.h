@@ -4,8 +4,8 @@
 #include <list>
 #include <fstream>
 #include <vector>
+#include <iomanip>
 #include "SQL_Interpreter.h"
-#include "Data.h"
 #include "StringOperator.h"
 using namespace std;
 extern const string fpath_commodity;
@@ -13,6 +13,8 @@ extern const string fpath_order;
 extern const string fpath_user;
 extern const string fpath_command;
 extern const string fpath_balance;
+extern const string fpath_message;
+extern const string fpath_cart;
 extern const wstring user_attribute;
 extern const wstring order_attribute;
 extern const wstring commodity_attribute;
@@ -114,6 +116,26 @@ public:
 	friend wofstream& operator<<(wofstream& output, const UserData& ud);
 };
 
+class MessageData :public Data
+{
+private:
+	wstring msg;
+	wstring senderID, receiverID;
+	bool read;
+public:
+	MessageData();
+	MessageData(wstring& _id, wstring& _msg, wstring& _senderID, wstring& _receiverID);
+	void format_output(int width);
+	wstring get_senderID();
+	wstring get_receiverID();
+	wstring get_msg();
+	bool hasRead();
+	void readMsg();
+	friend class MessageHandler;
+	friend class DataHandler;
+	// friend wostream& operator<<(wostream& output, const MessageData& msgd);
+	friend wofstream& operator<<(wofstream& output, const MessageData& msgd);
+};
 
 template<typename T>
 class Table
@@ -143,9 +165,11 @@ public:
 		return nullptr;
 	}
 	friend class SQL_Interpreter;
+	friend class MessageHandler;
 	friend class UserHandler;
 	friend class DataHandler;
 	friend class InfoMenu;
+	friend class ChatMenu;
 	//write_to_file(); // TODO
 };
 
@@ -170,4 +194,17 @@ public:
 };
 
 
+class MessageHandler
+{
+public:
+	MessageHandler();
+	void sendMsg(wstring& msg, wstring& senderID, wstring& receieverID);
+	void retractMsg(UserData* user, wstring& msgID);
+	list<MessageData>* get_message_list();
+private:
+	list<MessageData> Msglist;
+	void logMessage(MessageData& msgd);
+	void updateMessage();
+	wstring generate_new_id();
+};
 

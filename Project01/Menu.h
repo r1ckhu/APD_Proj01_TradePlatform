@@ -15,9 +15,8 @@ public:
 	void formatting_output(list<CommodityData>* _list, bool onlyOnSale = false);
 	void formatting_output(list<pair<CommodityData, int>>* _list);
 	void formatting_output(list<UserData>* _list);
-	void formatting_output(list<UserData>* _list, UserData* user);
 	void formatting_output(list<OrderData>* _list);
-	void formatting_output(list<OrderData>* _list, UserData* user);
+	void formatting_output(list<MessageData>* _list,UserData *user);
 };
 
 class DefaultMenu : public Menu
@@ -84,4 +83,14 @@ public:
 	void modify_info(UserData* user);
 	void recharge(UserData* user);
 	float cal_balance(UserData* user);
+};
+
+class ChatMenu :public Menu
+{
+public:
+	void inputloop(UserData* user);
+	void printMenu();
+	void sendMessage(UserData* user);
+	void retractMessage(UserData* user);
+	void show_message(UserData* user);
 };

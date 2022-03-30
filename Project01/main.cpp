@@ -12,6 +12,7 @@
 //#include <crtdbg.h>
 DataHandler datahandler;
 UserHandler userhandler;
+MessageHandler messagehandler;
 SQL_Interpreter sql_interpreter;
 Calculator calculator;
 locale zh_utf("zh_CN.UTF-8");

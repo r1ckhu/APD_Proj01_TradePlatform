@@ -87,6 +87,33 @@ void Menu::formatting_output(list<UserData>* _list)
 	putnch('*', 100);
 }
 
+void Menu::formatting_output(list<MessageData>* _list, UserData* user)
+{
+	if (_list->size() == 0) {
+		wprintf(L"No Message Found!\n");
+		return;
+	}
+	wcout << L"This is the message you have received: " << endl;
+	putnch('*', 100);
+	wcout << setw(WIDTH) << L"messageID" << setw(WIDTH) << L"content" << setw(WIDTH)
+		<< L"senderID" << setw(WIDTH) << L"receiverID" <<L"readState" << endl;
+	for (list<MessageData>::iterator it = _list->begin(); it != _list->end(); it++)
+		if ((*it).get_receiverID() == user->id) {
+			(*it).readMsg();
+			(*it).format_output(15);
+		}
+	putnch('*', 100);
+	wcout << endl;
+	wcout << L"This is the message you have sent: " << endl;
+	putnch('*', 100);
+	wcout << setw(WIDTH) << L"messageID" << setw(WIDTH) << L"content" << setw(WIDTH)
+		<< L"senderID" << setw(WIDTH) << L"receiverID" << L"readState" << endl;
+	for (list<MessageData>::iterator it = _list->begin(); it != _list->end(); it++)
+		if ((*it).get_senderID() == user->id)
+			(*it).format_output(15);
+	putnch('*', 100);
+}
+
 void DefaultMenu::printMenu()
 {
 	putnch('\n', 2);
