@@ -30,7 +30,6 @@ DataHandler::DataHandler()
 			wss_values << ws_values;
 			UserData userdata(wss_values);
 			userTable._list.push_back(userdata);
-			userTable.cnt++;
 		}
 		in_user.close();
 	}
@@ -53,7 +52,6 @@ DataHandler::DataHandler()
 			wss_values << ws_values;
 			CommodityData commoditydata(wss_values);
 			commodityTable._list.push_back(commoditydata);
-			commodityTable.cnt++;
 		}
 		in_commodity.close();
 	}
@@ -76,7 +74,6 @@ DataHandler::DataHandler()
 			wss_values << ws_values;
 			OrderData orderdata(wss_values);
 			orderTable._list.push_back(orderdata);
-			orderTable.cnt++;
 		}
 		in_order.close();
 	}
@@ -114,13 +111,13 @@ Table<OrderData>* DataHandler::get_order_table()
 wstring DataHandler::generate_commodity_id()
 {
 	wstringstream wss;
-	commodityTable.cnt++;
-	if (commodityTable.cnt < 10)
-		wss << "M00" << commodityTable.cnt;
-	else if (commodityTable.cnt < 100)
-		wss << "M0" << commodityTable.cnt;
+	int cnt = commodityTable._list.size() + 1;
+	if (cnt < 10)
+		wss << "M00" << cnt;
+	else if (cnt < 100)
+		wss << "M0" << cnt;
 	else
-		wss << "M" << commodityTable.cnt;
+		wss << "M" << cnt;
 	wstring id;
 	wss >> id;
 	return id;
@@ -129,13 +126,13 @@ wstring DataHandler::generate_commodity_id()
 wstring DataHandler::generate_user_id()
 {
 	wstringstream wss;
-	userTable.cnt++;
-	if (userTable.cnt < 10)
-		wss << "U00" << userTable.cnt;
-	else if (userTable.cnt < 100)
-		wss << "U0" << userTable.cnt;
+	int cnt = userTable._list.size() + 1;
+	if (cnt < 10)
+		wss << "U00" << cnt;
+	else if (cnt < 100)
+		wss << "U0" << cnt;
 	else
-		wss << "U" << userTable.cnt;
+		wss << "U" << cnt;
 	wstring id;
 	wss >> id;
 	return id;
@@ -144,13 +141,13 @@ wstring DataHandler::generate_user_id()
 wstring DataHandler::generate_order_id()
 {
 	wstringstream wss;
-	orderTable.cnt++;
-	if (orderTable.cnt < 10)
-		wss << "T00" << orderTable.cnt;
-	else if (orderTable.cnt < 100)
-		wss << "T0" << orderTable.cnt;
+	int cnt = orderTable._list.size() + 1;
+	if (cnt < 10)
+		wss << "T00" << cnt;
+	else if (cnt < 100)
+		wss << "T0" << cnt;
 	else
-		wss << "T" << orderTable.cnt;
+		wss << "T" << cnt;
 	wstring id;
 	wss >> id;
 	return id;

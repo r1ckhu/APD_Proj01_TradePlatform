@@ -28,7 +28,6 @@ int main()
 	//setlocale(LC_ALL, "zh_CN.UTF-8");
 	UserData* ud = nullptr;
 	DefaultMenu defaultmenu;
-	UserMenu usermenu;
 	defaultmenu.inputloop(ud);
 
 	return 0;

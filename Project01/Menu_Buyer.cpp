@@ -11,9 +11,11 @@ extern DataHandler datahandler;
 void BuyerMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 89);
-	wcout << L"1.View All Commodities 2.Purchase Commodities 3.Search Commodities 4.View History Orders 5.View Detailed Commidity Info 6.Show my cart 7.Return to Main Menu" << endl;
-	putnch('=', 89);
+	putnch('=', 68);
+	wcout << L"1.View All Commodities 2.Purchase Commodities 3.Search Commodities" << endl << endl;
+	wcout << L"4.View History Orders 5.View Detailed Commidity Info 6.Show my cart" << endl << endl;
+	wcout << L"7.Return to Main Menu" << endl;
+	putnch('=', 68);
 }
 void BuyerMenu::inputloop(UserData* user)
 {
@@ -188,6 +190,7 @@ void BuyerMenu::buy_commodity(UserData* user)
 				od.seller_id = cd->get_seller_id();
 				user->cart.push_back(od);
 				datahandler.add_cart(od);
+				wprintf(L"-----Successful!-----");
 			}
 		}
 	}
@@ -208,13 +211,13 @@ void BuyerMenu::search_commodity(UserData* user)
 	command += name;
 	list<pair<CommodityData, int>>* _list = (list<pair<CommodityData, int>>*)sql_interpreter.interpret(command);
 	char csign = ' ';
-	putnch('*', 30);
+	putnch('*', 40);
 	wprintf(L"---Please select the sorting order.---\n");
 	// TODO: can add more
 	wprintf(L"   (Default) enter for by relevance \n");
 	wprintf(L"   1 for by price (low->high)\n");
 	wprintf(L"   2 for by price (high->low)\n");
-	putnch('*', 30);
+	putnch('*', 40);
 	wprintf(L"Please enter the sorting order: ");
 	csign = getchar();
 	//wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -268,7 +271,7 @@ void BuyerMenu::show_detail(UserData* user)
 void BuyerMenu::show_cart(UserData* user)
 {
 	int WIDTH = 15;
-	putnch('*', 100);
+	putnch('*', 70);
 	wcout << setw(WIDTH) << L"SerialNumber" << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"unitPrice" << setw(WIDTH) << L"number" \
 		<< setw(WIDTH) << L"sellerID" << endl;
 	for (int i = 0; i < user->cart.size(); i++) {
@@ -276,7 +279,7 @@ void BuyerMenu::show_cart(UserData* user)
 			<< setw(WIDTH) << user->cart[i].price << setw(WIDTH) << user->cart[i].quantity
 			<< setw(WIDTH) << user->cart[i].seller_id << endl;
 	}
-	putnch('*', 100);
+	putnch('*', 70);
 }
 
 void BuyerMenu::modify_cart(UserData* user)
@@ -414,13 +417,13 @@ void BuyerMenu::check_cart(UserData* user)
 	int input = 0;
 	while (true) {
 		putnch('\n', 2);
-		putnch('-', 100);
+		putnch('-', 51);
 		putnch('*', 12, false);
 		wprintf(L"  The Shopping Cart subMenu  ");
 		putnch('*', 12);
 		wcout << endl;
 		wprintf(L"1.Show 2.Modify 3.Checkout 4.Return to BuyerMenu\n");
-		putnch('-', 100);
+		putnch('-', 51);
 		wprintf(L"Please choose an operation:");
 		InputHandler::inputCommand(input, 1, 4);
 		if (input == 1) {

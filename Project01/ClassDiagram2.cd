@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Calculator">
+    <Position X="15.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAIAAAICAAAAgAAEAAAAAABAAAAA=</HashCode>
+      <FileName>Calculator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Data">
+    <Position X="5.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAQgA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CommodityData">
+    <Position X="0.5" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAgAICCAAgAIAEAAgAAgAgABACAAAAQAAAAIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OrderData">
+    <Position X="3" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAABAAAAAIAAAAAAAAAAAAAAAAAAAICAAAAAAAAIIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserData">
+    <Position X="5.25" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAwBABAAAEAAAAAAAgIAAIABAAEAAAAEgAIIAE=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MessageData">
+    <Position X="8" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAgAAAAAAAAAAAAAACAAAAEAAAAAAgAAAAQADAEAIgA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Table&lt;T&gt;">
+    <Position X="20.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAQAAAAAAAIAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataHandler">
+    <Position X="26.25" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAARBAACKAAAACAoAAAAABAAACAAEAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MessageHandler">
+    <Position X="16.25" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AA4AAAAAAAAICAAAAEAAAQAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputHandler">
+    <Position X="24.25" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACBAAAAAAAAAAAAAAAAABAAAAAAIAAAAAIACA=</HashCode>
+      <FileName>InputHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Menu">
+    <Position X="7.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgABAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultMenu">
+    <Position X="11.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AdminMenu">
+    <Position X="0.5" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAARCAAAAABAAgAAAEAACAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserMenu">
+    <Position X="5.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BuyerMenu">
+    <Position X="7" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAQCCAAAAwAAhAAAAAAiAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SellerMenu">
+    <Position X="9.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAQAAAAAABAAgAAAAAAiAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InfoMenu">
+    <Position X="13.5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAQAgAAQAAAAIAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatMenu">
+    <Position X="3" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAQAAAAAAAAAgAAgAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SQL_Interpreter">
+    <Position X="22.25" Y="2" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAACDAAAAEAAAACBAAAAAAAQBQAAAAAEAEAAk=</HashCode>
+      <FileName>SQL_Interpreter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StringOperator">
+    <Position X="18.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAQAAAAAAAAAAAAAAAIBAAAAAAACAAAA=</HashCode>
+      <FileName>StringOperator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserHandler">
+    <Position X="18.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAIAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>User.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Precedence">
+    <Position X="20.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAQAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Calculator.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UserTypes">
+    <Position X="16.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CommodityStates">
+    <Position X="16.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DATA_TYPES">
+    <Position X="18.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABAAA=</HashCode>
+      <FileName>SQL_Interpreter.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="10" />
+</ClassDiagram>

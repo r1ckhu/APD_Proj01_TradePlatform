@@ -7,9 +7,9 @@ extern SQL_Interpreter sql_interpreter;
 void UserMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 49);
+	putnch('=', 70);
 	wcout << L"1.I am a Buyer 2.I am a Seller 3.Manage Personal Info 4.Chat 5.Logout" << endl;
-	putnch('=', 49);
+	putnch('=', 70);
 }
 void UserMenu::inputloop(UserData* user)
 {

@@ -141,7 +141,6 @@ template<typename T>
 class Table
 {
 private:
-	int cnt = 0;
 	list<T> _list;
 public:
 	T* find_byID(wstring& tar)

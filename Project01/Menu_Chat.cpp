@@ -6,9 +6,9 @@ extern MessageHandler messagehandler;
 void ChatMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 100);
+	putnch('=', 69);
 	wcout << L"1.Show Message 2.Send Message 3.RetractMessage 4.Return to Main Menu" << endl;
-	putnch('=', 100);
+	putnch('=', 69);
 }
 
 void ChatMenu::inputloop(UserData* user)

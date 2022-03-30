@@ -7,9 +7,10 @@ extern SQL_Interpreter sql_interpreter;
 void AdminMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 100);
-	wcout << L"1.View All Commodities 2.Search Commodities 3.Remove Commodity 4.View All Orders 5.View All Users 6.Ban Users 7.Sign Out" << endl;
-	putnch('=', 100);
+	putnch('=', 63);
+	wcout << L"1.View All Commodities 2.Search Commodities 3.Remove Commodity" << endl << endl;
+	wcout << L"4.View All Orders 5.View All Users 6.Ban Users 7.Sign Out" << endl;
+	putnch('=', 63);
 }
 void AdminMenu::inputloop(UserData* user)
 {
@@ -66,7 +67,7 @@ void AdminMenu::search_commodity()
 	}
 	wstring command(L"SELECT * FROM commodity WHERE commodityName CONTAINS ");
 	command += name;
-	list<CommodityData>* _list = (list<CommodityData>*)sql_interpreter.interpret(command);
+	list<pair<CommodityData, int>>* _list = (list<pair<CommodityData, int>>*)sql_interpreter.interpret(command);
 	sql_interpreter.log(command);
 	formatting_output(_list);
 	delete _list;

@@ -13,9 +13,9 @@ extern Calculator calculator;
 void InfoMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 45);
+	putnch('=', 65);
 	wcout << L"1.View My Info 2.Modify My Info 3.Recharge 4.Return to Main Menu" << endl;
-	putnch('=', 45);
+	putnch('=', 65);
 }
 void InfoMenu::inputloop(UserData* user)
 {

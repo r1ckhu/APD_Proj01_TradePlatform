@@ -10,6 +10,7 @@ const int Camel_case_bonus = 10;
 const int Unmatched_leading_letter = -2;
 const int Unmatched_leading_maxCnt = 3;
 const int Full_matched = 20;
+
 class StringOperator
 {
 public:

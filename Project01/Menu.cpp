@@ -30,7 +30,7 @@ void Menu::formatting_output(list<CommodityData>* _list, bool onlyOnSale)
 		wprintf(L"No Commodity Found!\n");
 		return;
 	}
-	putnch('*', 100);
+	putnch('*', 110);
 	wcout << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"commodityName" << setw(WIDTH) << L"price" << setw(WIDTH) << L"number" <<
 		setw(WIDTH) << L"description" << setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
 	for (list<CommodityData>::iterator it = _list->begin(); it != _list->end(); it++)
@@ -41,7 +41,7 @@ void Menu::formatting_output(list<CommodityData>* _list, bool onlyOnSale)
 		else if (!onlyOnSale)
 			(*it).format_output(15);
 	}
-	putnch('*', 100);
+	putnch('*', 110);
 }
 
 void Menu::formatting_output(list<pair<CommodityData, int>>* _list)
@@ -50,13 +50,13 @@ void Menu::formatting_output(list<pair<CommodityData, int>>* _list)
 		wprintf(L"No Commodity Found!\n");
 		return;
 	}
-	putnch('*', 100);
+	putnch('*', 110);
 	wcout << setw(WIDTH) << L"commodityID" << setw(WIDTH) << L"commodityName" << setw(WIDTH) << L"price" << setw(WIDTH) << L"number" <<
 		setw(WIDTH) << L"description" << setw(WIDTH) << L"sellerID" << setw(WIDTH) << L"addedDate" << setw(WIDTH) << L"state" << endl;
 	for (list<pair<CommodityData, int>>::iterator it = _list->begin(); it != _list->end(); it++)
 		if ((*it).first.get_commodity_state() == ON_SELL)
 			(*it).first.format_output(15);
-	putnch('*', 100);
+	putnch('*', 110);
 }
 
 void Menu::formatting_output(list<OrderData>* _list)
@@ -117,9 +117,9 @@ void Menu::formatting_output(list<MessageData>* _list, UserData* user)
 void DefaultMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 47);
+	putnch('=', 63);
 	wcout << L"1.Admin Login 2.User Register 3.User Login 4.Exit 5.Calculator" << endl;
-	putnch('=', 47);
+	putnch('=', 63);
 }
 
 void DefaultMenu::inputloop(UserData* user)

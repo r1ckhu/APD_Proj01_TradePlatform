@@ -10,9 +10,10 @@ extern DataHandler datahandler;
 void SellerMenu::printMenu()
 {
 	putnch('\n', 2);
-	putnch('=', 85);
-	wcout << L"1.Release an Commodity 2.View my Commodities 3.Modify Commodity Info 4.Remove Commodity 5.View History Orders 6.Return to Main Menu" << endl;
-	putnch('=', 85);
+	putnch('=', 68);
+	wcout << L"1.Release an Commodity 2.View my Commodities 3.Modify CommodityInfo" << endl << endl;
+	wcout << L"4.Remove Commodity 5.View History Orders 6.Return to Main Menu" << endl;
+	putnch('=', 68);
 }
 void SellerMenu::inputloop(UserData* user)
 {
